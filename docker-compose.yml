@@ -1,14 +1,14 @@
 version: '3.7'
 
 networks:
-  webtrax_net:
+  webgest_net:
     driver: bridge
 
 services:
-  webtrax: 
+  webgest: 
     image: imatto/webgest:latest-serverino
     restart: unless-stopped # dev only
     ports: 
       - 80
     networks:
-      - webtrax_net
+      - webgest_net
