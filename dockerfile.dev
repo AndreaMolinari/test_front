@@ -7,10 +7,10 @@ RUN mkdir /webgest_cnt/node_modules && chown node:node /webgest_cnt
 
 WORKDIR /webgest_cnt
 
-COPY --chown=node:node ../webgest/package.json ../webgest/package-lock.json ./
+COPY --chown=node:node ./package.json ./package-lock.json ./
 
 RUN npm ci --quiet
 
-COPY --chown=node:node ../webgest .
+COPY --chown=node:node ./ .
 
 ENTRYPOINT [ "npm", "start"]
