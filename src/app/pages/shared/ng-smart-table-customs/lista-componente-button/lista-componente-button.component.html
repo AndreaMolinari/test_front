@@ -1,0 +1,22 @@
+<!-- <ng-container [ngSwitch]="true">
+        <div *ngSwitchCase="this.value.periferica == '--' || this.value.componente[0] == undefined || this.value.componente[0].idComponente == null"
+            class="notALink" (click)="reroute()">{{value.periferica}}</div>
+        <div *ngSwitchDefault class="underline">
+            {{value.periferica}}
+            <nb-icon (click)="reroute()" icon="edit-outline"></nb-icon>
+        </div>
+    </ng-container> -->
+
+<ng-container [ngSwitch]="value !== 'RADIOCOMANDO' && value.componente.length > 0">
+    <div *ngSwitchCase="true">
+        <div *ngFor="let comp of value.componente" class="underline">
+            {{comp.unitcode}}
+            <nb-icon (click)="reroute(comp.idComponente)" icon="edit-outline"></nb-icon>
+        </div>
+    </div>
+
+    <div *ngSwitchDefault class="notALink" (click)="reroute()">
+        {{(value.periferica) ? value.periferica : value}}
+    </div>
+
+</ng-container>

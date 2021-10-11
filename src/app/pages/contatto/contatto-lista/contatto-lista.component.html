@@ -1,0 +1,21 @@
+<nb-card>
+  <nb-card-header>
+    <div class="row">
+      <div class="col-2 text-left">
+        <h5>Contatto</h5>
+      </div>
+      <div class="col-10 text-right">
+        <button nbButton (click)="exportContatti()" [nbSpinner]="loadingData" nbSpinnerSize="giant"
+          nbSpinnerStatus="primary" status="primary">
+          <nb-icon icon="cloud-download-outline"></nb-icon>
+          Esporta contatti newsletter
+        </button>
+      </div>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+    <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)" (delete)="onDelete($event)"
+      [source]="source"></ng2-smart-table>
+  </nb-card-body>
+</nb-card>

@@ -1,0 +1,28 @@
+<p class="title">Benvenuto nel nuovo WebGest</p>
+<ng-container *ngIf="!env.rivenditore" [ngSwitch]="userType">
+
+    <div class="contenitoreListe" *ngSwitchCase="3">
+        <app-anagrafica-lista [origine]="'dashboard'"></app-anagrafica-lista>
+    </div>
+
+    <div class="contenitoreGrafici" *ngSwitchDefault>
+        <nb-card>
+            <nb-card-header> Modelli GPS </nb-card-header>
+            <nb-card-body [nbSpinner]="loadingGps" nbSpinnerStatus="primary">
+                <div *ngIf="!loadingGps" echarts [options]="GPSOptions" class="echart"></div>
+            </nb-card-body>
+        </nb-card>
+        <nb-card>
+            <nb-card-header> Modelli Tachigrafo </nb-card-header>
+            <nb-card-body [nbSpinner]="loadingTachos" nbSpinnerStatus="primary">
+                <div *ngIf="!loadingTachos" echarts [options]="tachoOptions" class="echart"></div>
+            </nb-card-body>
+        </nb-card>
+        <nb-card>
+            <nb-card-header> Applicativi </nb-card-header>
+            <nb-card-body [nbSpinner]="loadingApplicativis" nbSpinnerStatus="primary">
+                <div *ngIf="!loadingApplicativis" echarts [options]="applicativisOptions" class="echart"></div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</ng-container>

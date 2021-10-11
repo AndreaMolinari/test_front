@@ -1,0 +1,155 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <ng-container [ngSwitch]="true">
+                    <h5 *ngSwitchDefault>Aggiungi Mezzo</h5>
+                    <h5 *ngSwitchCase="modifica == true">Modifica Mezzo</h5>
+                </ng-container>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Mezzo" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Mezzo {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Mezzo" nbTooltipStatus="danger"
+                        nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+
+                <label class="label"> Brand </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idBrand" placeholder="Seleziona un brand"
+                        (selectionChange)="modalAdd($event.value)">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un brand:"
+                                noEntriesFoundLabel="'Nessun brand trovato con questo nome...'"
+                                formControlName="autocompleteBrand">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addBrand"> + Aggiungi nuovo brand... </mat-option>
+                        <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                            [style.height.px]="45 * 5">
+                            <mat-option *cdkVirtualFor="let brand of filteredBrands[i] | async" [value]="brand.id">
+                                {{brand.marca}}
+                            </mat-option>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- <label class="label"> Seleziona un Brand </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idBrand"
+                        (selectionChange)="modalAdd($event.value); getModelli($event.value)"
+                        placeholder="Seleziona un brand">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un brand..."
+                                noEntriesFoundLabel="'Nessun brand trovato con questo nome'"
+                                formControlName="autocompleteBrand" ngModel (ngModelChange)="customSearchBrand(i)">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addBrand"> + Aggiungi nuovo brand... </mat-option>
+                        <mat-option *ngFor="let brand of arrayBrandFiltered | async" [value]="brand.id">
+                            {{brand.marca}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+
+            </div>
+            <div class="col-md-6">
+                <label class="label"> Modello </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idModello" placeholder="Seleziona un modello"
+                        (selectionChange)="modalAdd($event.value)">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un modello:"
+                                noEntriesFoundLabel="'Nessun modello trovato con questo nome...'"
+                                formControlName="autocompleteModello">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addModello"> + Aggiungi nuovo modello... </mat-option>
+                        <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                            [style.height.px]="45 * 5">
+                            <mat-option *cdkVirtualFor="let model of filteredModels[i] | async" [value]="model.id">
+                                {{model.modello}}
+                            </mat-option>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- <label class="label"> Seleziona un modello </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idModello" (selectionChange)="modalAdd($event.value)"
+                        placeholder="Seleziona un modello">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un modello..."
+                                noEntriesFoundLabel="'Nessun modello trovato con questo nome'"
+                                formControlName="autocompleteModello" ngModel (ngModelChange)="customSearchModello(i)">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addModello"> + Aggiungi nuovo modello... </mat-option>
+                        <mat-option *ngFor="let modello of arrayModelloFiltered | async" [value]="modello.id">
+                            {{modello.modello}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Targa</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="targa"
+                        placeholder="Targa" (input)="isRequired($event, 'targa')">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Telaio</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="telaio"
+                        placeholder="Telaio" (input)="isRequired($event, 'telaio')">
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Anno di immatricolazione</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="anno"
+                        placeholder="Anno di immatricolazione">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Colore</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="colore"
+                        placeholder="Colore">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Info</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="info" disabled
+                        placeholder="Informazioni aggiuntive">
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,46 @@
+<h1 id="title" class="title">WebGest login</h1>
+<p class="sub-title">Esegui il login con il tuo account WebGest</p>
+
+<nb-alert *ngIf="loggedin == false" outline="danger" role="alert">
+  <p class="alert-title"><b>Login Fallito</b></p>
+  <ul class="alert-message-list">
+    <li>Username o password errati!</li>
+  </ul>
+</nb-alert>
+
+<nb-alert *ngIf="loggedin == true" outline="success" role="alert">
+  <p class="alert-title"><b>Login eseguito con successo!</b></p>
+  <ul class="alert-message-list">
+    <li>Hai eseguito correttamente il login!</li>
+    <li>Verrai ora reindirizzato alla homepage</li>
+  </ul>
+</nb-alert>
+
+<form (ngSubmit)="login()" [formGroup]="myForm">
+  <div class="row">
+    <label class="label">Username: </label>
+    <input nbInput fullWidth #username class="form-control" type="text" formControlName="username"
+      placeholder="Username" (keydown.enter)="login()">
+    <ng-container *ngIf="username.invalid && username.touched">
+      <p class="error-message" *ngIf="username.errors?.required">
+        Username obbligatorio!
+      </p>
+    </ng-container>
+  </div>
+  <div class="row">
+    <label class="label">Password: </label>
+    <input (keydown.enter)="login()" nbInput fullWidth class="form-control" type="password" formControlName="password"
+      placeholder="Password">
+  </div>
+  <div class="row">
+    <div class="form-group spazio">
+      <nb-checkbox formControlName="remeberME" status="primary">Ricordami</nb-checkbox>
+    </div>
+  </div>
+
+  <div class="row">
+    <button [nbSpinner]="loading" nbSpinnerStatus="primary" nbButton fullWidth class="loginButton" form="myForm" type="submit" status="success"
+      [disabled]="myForm.invalid || loading" (click)="login()">Login</button>
+  </div>
+
+</form>

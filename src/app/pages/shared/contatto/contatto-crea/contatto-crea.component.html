@@ -1,0 +1,63 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Contatto</h5>
+            </div>
+            <div class="ml-1" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" hero (click)="add()" nbTooltip="Aggiungi Rubrica" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Rubrica" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let contact of parentForm.controls; let c = index;">
+        <ng-container *ngIf="c > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <h6>Contatto {{c + 1}}</h6>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" hero (click)="remove(c)" nbTooltip="Rimuovi Rubrica"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="c">
+            <div class="col-12">
+                <nb-alert accent="warning"
+                    *ngIf="contact.get('nome').value == null || contact.get('nome').value === ''">
+                    Il nome rubrica è obblicatorio!
+                </nb-alert>
+                <label class="label">Nome contatto</label>
+                <input fullWidth nbInput class="form-control" type="text" formControlName="nome"
+                    placeholder="Nome contatto">
+            </div>
+        </div>
+        <div class="row spazio">
+            <div class="col-12">
+                <ng2-smart-table [settings]="settings" [source]="sourceArray[c]"
+                    (createConfirm)="onCreateContatto($event, c)" (editConfirm)="onEditContatto($event, c)"
+                    (deleteConfirm)="onDeleteContatto($event, c)">
+                </ng2-smart-table>
+            </div>
+        </div>
+        <div class="row spazio" [formGroupName]="c">
+            <div class="col-12">
+                <label class="label">Descrizione</label>
+                <textarea nbInput fullWidth class="form-control" type="text" formControlName="descrizione"
+                    placeholder="Descrizione"></textarea>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

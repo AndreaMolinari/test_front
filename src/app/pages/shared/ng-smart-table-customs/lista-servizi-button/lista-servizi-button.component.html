@@ -1,0 +1,14 @@
+<ng-container [ngSwitch]="true">
+    <!-- <div *ngSwitchCase="value.servizi !== '+'" (click)="reroute()" nbTooltip="Prezzo servizi?" nbTooltipStatus="info" -->
+    <div class="link" *ngSwitchCase="value.servizi !== '+'" (click)="reroute()">
+        {{value.servizi}}
+        <nb-icon class="listButton" icon="list-outline"></nb-icon>
+    </div>
+    <div *ngSwitchDefault>
+        <ng-container [ngSwitch]="env.rivenditore">
+            <span *ngSwitchCase="true"> 0 </span>
+            <span class="link" *ngSwitchCase="false" (click)="reroute()"> {{value.servizi}} </span>
+            <span *ngSwitchDefault> 0 </span>
+        </ng-container>
+    </div>
+</ng-container>

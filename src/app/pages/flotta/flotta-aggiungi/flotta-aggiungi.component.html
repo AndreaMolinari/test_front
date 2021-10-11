@@ -1,0 +1,66 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-2">
+                <button nbButton size="small" (click)="goBack()" status="primary">
+                    <nb-icon icon="arrow-back"></nb-icon>
+                    Indietro
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <shared-flotta-crea (outForm)="addFormGroup('flotta', $event)" [parentForm]="myForm.get('flotta')"
+                        [modifica]="modifica" [dataInstance]="apiFlotta" [max]=1></shared-flotta-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer *ngIf="!env.rivenditore">
+        <div class="row">
+            <div class="col-md-3">
+                <button nbButton form="myForm" fullWidth (click)="onReset()" status="warning">Resetta i
+                    campi</button>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <button style="margin-right: 2rem;" *ngIf="!env.rivenditore && modifica" status="warning" nbButton size="small"
+                    (click)="openDialog(dialogConferma)">
+                    <mat-icon>layers_clear</mat-icon>
+                </button>
+            </div>
+
+            <div class="col-md-3 text-right">
+                <button nbButton (click)="onSubmit()" fullWidth [disabled]="myForm.invalid" status="success">Salva flotta</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>
+
+<ng-template #dialogConferma let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>Sanificazione flotta</nb-card-header>
+        <nb-card-body>
+
+            <div style="text-align: center; margin: 2rem;">
+                <b> Sei sicuro di voler sanificare questa flotta? </b>
+                <p> Questa operazione cancellerà tutti i servizi doppi in flotta </p>
+                <b> Tutte le modifiche non salvate di questa flotta andranno perse... </b>
+            </div>
+
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row">
+                <div class="col-6 text-left">
+                    <button nbButton (click)="ref.close()" status="danger">Annulla</button>
+                </div>
+                <div class="col-6 text-right">
+                    <button nbButton (click)="sanitizeServizio()" status="success">Ok</button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

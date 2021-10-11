@@ -1,0 +1,43 @@
+:host {
+    .title {
+        font-size : 25px;
+        text-align: center;
+    }
+
+    .contenitoreGrafici {
+        display       : flex;
+        flex-direction: row;
+        width         : 100%;
+
+        nb-card {
+            width     : 100%;
+            flex-grow : 1;
+            margin    : 1rem;
+            min-height: 15rem;
+
+            &:first-child {
+                margin-left: 0;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            nb-card-body {
+                margin : 0;
+                padding: 1rem;
+            }
+
+            .echart {
+                width: 100%;
+            }
+        }
+    }
+
+    .contenitoreListe {
+        display       : flex;
+        flex-direction: column;
+        width         : 100%;
+    }
+
+}

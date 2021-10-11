@@ -1,0 +1,23 @@
+:host {
+    nb-card {
+        max-height: 80vh;
+
+        nb-card-body {
+            padding-top: 0;
+
+            ::ng-deep ng2-smart-table thead {
+                height         : 100%;
+                border-collapse: collapse;
+                top            : 0;
+                position       : sticky;
+                z-index        : 99;
+            }
+
+            ::ng-deep ng2-smart-table-pager {
+                display: none;
+            }
+        }
+
+    }
+
+}

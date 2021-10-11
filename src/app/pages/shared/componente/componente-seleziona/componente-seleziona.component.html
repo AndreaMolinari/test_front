@@ -1,0 +1,190 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>{{(source == 'componente' ? 'Componente' : 'Tachigrafo')}}</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+            </div>
+            <div class="ml-1">
+                <button *ngIf="max > parentForm.length" nbButton size="tiny"
+                    (click)="add(); checkPrincipale(parentForm.length - 1)" nbTooltip="Aggiungi Componente"
+                    nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Componente" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <div class="h6">{{(source == 'componente' ? 'Componente' : 'Tachigrafo')}} {{i + 1}}</div>
+                </div>
+                <div class="ml-1">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Componente"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <fieldset [disabled]="(isRivenditore && modifica) ? true : false">
+            <div class="d-flex flex-column" [formGroupName]="i">
+                <div class="flex-grow-1">
+                    <label class="label">
+                        {{(source == 'componente') ? 'Seleziona il componente' : 'Seleziona il tachigrafo'}}
+                    </label>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="idComponente" (selectionChange)="modalAdd(i, $event.value)"
+                            (click)="isTouched(i)"
+                            [placeholder]="(source == 'componente') ? 'Seleziona il componente' : 'Seleziona il tachigrafo'">
+                            <mat-option>
+                                <ngx-mat-select-search
+                                    [placeholderLabel]="(source == 'componente') ? 'Cerca componente' : 'Cerca tachigrafo'"
+                                    noEntriesFoundLabel="'Nessun componente trovato con questo unitcode'"
+                                    formControlName="autocomplete">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option value="addComponente"> + Aggiungi nuovo Componente... </mat-option>
+                            <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                [style.height.px]="45 * 5">
+                                <mat-option *cdkVirtualFor="let componente of filteredComponents[i] | async"
+                                    [value]="componente['id']">
+                                    {{componente['unitcode']}}
+                                    {{(componente['imei']) ? ' -- '+componente['imei'] : ''}}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="my-1">
+                    <div class="d-flex">
+                        <nb-checkbox style="white-space: nowrap;" formControlName="parziale" status="primary"
+                            *ngIf="source === 'componente'">
+                            Ho la chiave
+                        </nb-checkbox>
+                        <nb-checkbox *ngIf="parentForm.length > 1" class="ml-auto" style="white-space: nowrap;"
+                            (change)="checkPrincipale(i)" formControlName="principale" status="primary">
+                            {{(source == 'tacho') ? 'Installato' : 'Principale'}}
+                        </nb-checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div *ngSwitchDefault>
+                    <div class="d-flex align-items-center" [formGroupName]="i">
+                        <div class="flex-grow-1">
+                            <label class="label">
+                                {{(source == 'componente') ? 'Seleziona il componente' : 'Seleziona il tachigrafo'}}
+                            </label>
+
+                            <mat-form-field appearance="outline">
+                                <mat-select formControlName="idComponente" (selectionChange)="modalAdd(i, $event.value)"
+                                    (click)="isTouched(i)"
+                                    [placeholder]="(source == 'componente') ? 'Seleziona il componente' : 'Seleziona il tachigrafo'">
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [placeholderLabel]="(source == 'componente') ? 'Cerca componente' : 'Cerca tachigrafo'"
+                                            noEntriesFoundLabel="'Nessun componente trovato con questo unitcode'"
+                                            formControlName="autocomplete">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option value="addComponente"> + Aggiungi nuovo Componente... </mat-option>
+
+                                    <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4"
+                                        [maxBufferPx]="45 * 6" [style.height.px]="45 * 5">
+
+                                        <mat-option *cdkVirtualFor="let componente of filteredComponents[i] | async"
+                                            [value]="componente['id']">
+                                            {{componente['unitcode']}}
+                                            {{(componente['imei']) ? ' -- '+componente['imei'] : ''}}
+                                        </mat-option>
+
+                                    </cdk-virtual-scroll-viewport>
+
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                        <div class="ml-2" *ngIf="source == 'componente'">
+                            <nb-checkbox class="align-self-center" style="white-space: nowrap;"
+                                formControlName="parziale" status="primary">Ho la chiave</nb-checkbox>
+                        </div>
+                    </div>
+                </div> -->
+
+            <button class="spazio" nbButton fullWidth
+                (click)="(expandPannel[i] == true) ? expandPannel[i] = false : expandPannel[i] = true"
+                *ngIf="source == 'componente'" status="primary">
+                {{expandPannel[i] ? 'Nascondi' : 'Espandi'}}
+            </button>
+            <div class="spazio" *ngIf="expandPannel[i]">
+                <div class="d-flex mt-2" [formGroupName]="i">
+                    <div>
+                        <nb-checkbox (change)="checkRestituzione(i)" formControlName="restituzione">
+                            Restituzione
+                        </nb-checkbox>
+                    </div>
+                    <div class="ml-auto">
+                        <nb-checkbox (change)="checkRicalcoloIndirizzi(i)">
+                            Ricalcolo indirizzi
+                        </nb-checkbox>
+                    </div>
+                </div>
+                <div class="d-flex" [formGroupName]="i" *ngIf="dataRestituzione[i]">
+                    <div class="flex-grow-1">
+                        <div class="form-group">
+                            <label class="label">Data Restituzione</label>
+                            <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker"
+                                formControlName="dataRestituzione" placeholder="Data Restituzione">
+                            <nb-datepicker #datepicker format="D MMM YYYY"></nb-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="ricalcoloIndirizzi[i]">
+                    <div class="d-flex mt-2">
+                        <div class="flex-grow-1 mx-1">
+                            <label class="label">Data inizio ricalcolo</label>
+                            <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepickerInizio"
+                                placeholder="Inzio ricalcolo" #dataInzioRicalcolo>
+                            <nb-datepicker #datepickerInizio format="D MMM YYYY"></nb-datepicker>
+                        </div>
+                        <div class="col-4">
+                            <label class="label"> Orario inizio </label>
+                            <input nbInput fullWidth type="text" class="form-control" placeholder="Inzio ricalcolo"
+                                value="00:00" #oraInzioRicalcolo>
+                        </div>
+                    </div>
+                    <div class="d-flex mt-1">
+                        <div class="flex-grow-1 mx-1">
+                            <label class="label">Data fine ricalcolo</label>
+                            <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepickerFine"
+                                placeholder="Fine ricalcolo" #dataFineRicalcolo>
+                            <nb-datepicker #datepickerFine format="D MMM YYYY"></nb-datepicker>
+                        </div>
+                        <div class="col-4">
+                            <label class="label"> Orario Fine </label>
+                            <input nbInput fullWidth type="text" class="form-control" placeholder="Inzio ricalcolo"
+                                value="23:59" #oraFineRicalcolo>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="ml-auto mt-3">
+                            <button nbButton fullWidth status="primary"
+                                (click)="ricalcolaIndirizzo({FromDate: dataInzioRicalcolo.value, ToDate: dataFineRicalcolo.value, FromTime: oraInzioRicalcolo.value, ToTime: oraFineRicalcolo.value})">
+                                Calcola
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

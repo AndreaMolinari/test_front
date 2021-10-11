@@ -1,0 +1,104 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Aggiungi modello</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Modello" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Modello {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Modello"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <label class="label"> Tipologia </label>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="idTipologia" placeholder="Seleziona la tipologia">
+                            <mat-option>
+                                <ngx-mat-select-search placeholderLabel="Cerca una tipologia:"
+                                    noEntriesFoundLabel="'Nessuna tipologia trovata con questo nome...'"
+                                    formControlName="autocompleteTipologia">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                [style.height.px]="45 * 5">
+                                <mat-option *cdkVirtualFor="let tipologia of filteredTipologie[i] | async"
+                                    [value]="tipologia.id">
+                                    {{tipologia.tipologia}}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- <label class="label">Seleziona la tipologia</label>
+                    <nb-select fullWidth formControlName="idTipologia" placeholder="Seleziona la tipologia:">
+                        <nb-option *ngFor="let item of arrayTipologia" [value]="item.id"> {{item.tipologia}}
+                        </nb-option>
+                    </nb-select> -->
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+
+                    <label class="label"> Brand </label>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="idBrand" placeholder="Seleziona un brand"
+                            (selectionChange)="aggBrand($event.value)">
+                            <mat-option>
+                                <ngx-mat-select-search placeholderLabel="Cerca un brand:"
+                                    noEntriesFoundLabel="'Nessun brand trovato con questo nome...'"
+                                    formControlName="autocompleteBrand">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option value="addBrand"> + Aggiungi nuovo brand...</mat-option>
+                            <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                [style.height.px]="45 * 5">
+                                <mat-option *cdkVirtualFor="let brand of filteredBrands[i] | async" [value]="brand.id">
+                                    {{brand.marca}}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- <label class="label">Seleziona il brand</label>
+                    <nb-select fullWidth formControlName="idBrand" placeholder="Seleziona il brand:"
+                        (selectedChange)="aggBrand($event)">
+                        <nb-option *ngFor="let item of arrayBrand" [value]="item.id"> {{item.marca}} </nb-option>
+                        <nb-option value="addBrand"> + Aggiungi nuovo brand... </nb-option>
+                    </nb-select> -->
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Modello</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="modello"
+                        placeholder="Modello">
+                </div>
+            </div>
+
+        </div>
+    </nb-card-body>
+</nb-card>

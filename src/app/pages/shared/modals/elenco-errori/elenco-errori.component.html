@@ -1,0 +1,32 @@
+<nb-card>
+    <nb-card-header> Elenco errori per {{contextData.operazione}} di {{contextData.origine}} </nb-card-header>
+    <nb-card-body>
+        <table mat-table [dataSource]="contextData.errorsList" class="mat_table_as_nebular">
+
+            <ng-container matColumnDef="icona">
+                <th mat-header-cell *matHeaderCellDef style="width: 70px;"></th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-icon style="color: orange;">{{element.icona}}</mat-icon>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="titolo">
+                <th mat-header-cell *matHeaderCellDef> Titolo </th>
+                <td mat-cell *matCellDef="let element" style="text-transform: capitalize;"> {{element.titolo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="motivo">
+                <th mat-header-cell *matHeaderCellDef> Motivo </th>
+                <td mat-cell *matCellDef="let element"> {{element.motivo}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton fullWidth status="primary" (click)="ref.close()"> CORREGGI </button>
+    </nb-card-footer>
+</nb-card>

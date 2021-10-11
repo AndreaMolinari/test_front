@@ -1,0 +1,152 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Anagrafica</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+            </div>
+            <div class="col-2 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Anagrafica" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let anagrafica of parentForm.controls; let a = index;">
+        <fieldset [formGroupName]="a">
+            <ng-container *ngIf="a > 0">
+                <hr class="multiformSpacer">
+                <div class="row mb-1">
+                    <div class="col-8 col-md-10">
+                        <div class="h6">Anagrafica {{a + 1}}</div>
+                    </div>
+                    <div class="col-4 col-md-2 text-right">
+                        <button nbButton size="tiny" (click)="remove(a)" nbTooltip="Rimuovi Anagrafica"
+                            nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                            <nb-icon icon="minus"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="row">
+                <div class="col-xl-4 col-lg-4">
+                    <div class="form-group">
+                        <label class="label">Tipologia Anagrafica</label>
+                        <nb-select fullWidth formControlName="idTipologia" placeholder="Tipologia" multiple
+                            [disabled]="isRivenditore">
+                            <nb-option *ngFor="let item of tipologieAnagrafica" value="{{item.id}}"> {{item.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+                <div class="col-xl-4 offset-xl-4 col-lg-4 offset-lg-4">
+                    <div class="form-group">
+                        <label class="label">Genere</label>
+                        <nb-select fullWidth formControlName="idGenere" (selectedChange)="onChange(a, $event)"
+                            placeholder="Genere">
+                            <nb-option *ngFor="let item of generiAnagrafica" value="{{item.id}}">{{item.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" *ngIf="!isRivenditore">
+                    <div class="form-group">
+                        <label class="label">Commerciale</label>
+                        <nb-select fullWidth formControlName="idCommerciale" placeholder="Commerciale">
+                            <nb-option *ngFor="let item of anagraficheCommerciale" value="{{item.id}}">{{item.nome}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+                <div [class]="(!isRivenditore) ? 'col-md-6' : 'col-md-4'">
+                    <div class="form-group">
+                        <label class="label">Referente legale</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="referenteLegale"
+                            placeholder="Referente Legale" [readonly]="readonlyForm">
+                    </div>
+                </div>
+            </div>
+            <ng-container [ngSwitch]="parentForm.at(a).get('idGenere') !== null">
+                <div
+                    *ngSwitchCase="parentForm.at(a).get('idGenere').value == 21 || parentForm.at(a).get('idGenere').value == 22 || parentForm.at(a).get('idGenere').value == 102">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label">Partita IVA</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="pIva"
+                                        placeholder="Partita IVA"
+                                        (input)="$event.target.value.length > 10 && autocompleteOnPIVA($event.target.value, a); $event.target.value.length < 11 && cleanField(a) "
+                                        [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label">Ragione Sociale</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="ragSoc"
+                                        placeholder="Ragione Sociale" [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="label">Codice Fiscale</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="codFisc"
+                                        placeholder="Codice Fiscale" [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="parentForm.at(a).get('idGenere').value == 20">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="label">Nome</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="nome"
+                                        placeholder="Nome" [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="label">Cognome</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="cognome"
+                                        placeholder="Cognome" [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="label">Codice Fiscale</label>
+                                <div class="input-group">
+                                    <input nbInput fullWidth class="form-control" type="text" formControlName="codFisc"
+                                        placeholder="Codice Fiscale" [readonly]="readonlyForm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="label">Data di nascita</label>
+                            <div class="input-group">
+                                <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker"
+                                    formControlName="dataNascita" placeholder="Data di nascita">
+                                <nb-datepicker #datepicker format="D MMM YYYY"></nb-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchDefault>
+                    Devi selezionare il genere per visualizzare i campi
+                </div>
+            </ng-container>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

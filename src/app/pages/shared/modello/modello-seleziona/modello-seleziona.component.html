@@ -1,0 +1,70 @@
+<nb-card [formGroup]="questoForm">
+        <nb-card-header>
+            <div class="row">
+                <div class="col-8 col-md-10">
+                    <h5>Modello</h5>
+                </div>
+                <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                    <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Modello" nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                        <nb-icon icon="plus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </nb-card-header>
+        <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+            <ng-container *ngIf="i > 0">
+                <hr class="multiformSpacer">
+                <div class="row mb-1">
+                    <div class="col-8 col-md-10">
+                        <div class="h6">Modello {{i + 1}}</div>
+                    </div>
+                    <div class="col-4 col-md-2 text-right">
+                        <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Modello" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                            <nb-icon icon="minus"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label">Brand:</label>
+                            <nb-select
+                                fullWidth
+                                formControlName="idBrand"
+                                placeholder="Seleziona il brand:"
+                                (selectedChange)="aggBrand($event)" >
+                                    <nb-option *ngFor="let item of arrayBrand" value="{{item.id}}"> {{item.contenuto}} </nb-option>
+                                    <nb-option value="brand"> + Aggiungi nuovo brand... </nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label">Tipologia:</label>
+                            <nb-select
+                                fullWidth
+                                formControlName="idTipologia"
+                                placeholder="Seleziona la tipologia:"
+                                (selectedChange)="aggBrand($event)" >
+                                    <nb-option *ngFor="let item of arrayTipologia" value="{{item.id}}"> {{item.contenuto}} </nb-option>
+                                    <nb-option value="tipologia"> + Aggiungi nuova tipologia... </nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="label">Modello:</label>
+                            <nb-select
+                                fullWidth
+                                formControlName="idModello"
+                                placeholder="Seleziona il modello:"
+                                (selectedChange)="aggBrand($event)" >
+                                    <nb-option *ngFor="let item of arrayModello" value="{{item.id}}"> {{item.contenuto}} </nb-option>
+                                    <nb-option value="modello"> + Aggiungi nuovo modello... </nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                </div>
+        </nb-card-body>
+    </nb-card>

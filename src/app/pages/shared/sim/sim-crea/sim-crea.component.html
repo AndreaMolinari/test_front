@@ -1,0 +1,82 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Aggiungi SIM</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Sim" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Sim {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Sim" nbTooltipStatus="danger"
+                        nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Modello</label>
+                    <nb-select fullWidth formControlName="idModello" placeholder="Seleziona il modello:"
+                        (selectedChange)="aggModello($event)">
+                        <nb-option value="addModello"> + Aggiungi nuovo Modello... </nb-option>
+                        <nb-option-group *ngFor="let brand of arrayModello" [title]="brand.marca">
+                            <nb-option *ngFor="let modello of brand.modelli" value="{{modello.id}}"> {{modello.modello}}
+                            </nb-option>
+                        </nb-option-group>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Seriale</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="serial"
+                        placeholder="Seriale">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">APN</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="apn" placeholder="APN">
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Data attivazione</label>
+                    <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker1"
+                        formControlName="dataAttivazione" placeholder="Data di attivazione">
+                    <nb-datepicker #datepicker1 format="D MMM YYYY"></nb-datepicker>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label">Data disattivazione</label>
+                    <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker2"
+                        formControlName="dataDisattivazione" placeholder="Data di disattivazione">
+                    <nb-datepicker #datepicker2 format="D MMM YYYY"></nb-datepicker>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="form-group checkbox">
+                    <nb-checkbox formControlName="bloccato" status="danger">Bloccata</nb-checkbox>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

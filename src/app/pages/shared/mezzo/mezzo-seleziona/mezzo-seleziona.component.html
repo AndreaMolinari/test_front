@@ -1,0 +1,77 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Mezzo</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+            </div>
+            <div class="ml-1">
+                <button *ngIf="max > parentForm.length" nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Mezzo"
+                    nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Mezzo" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <div class="h6">{{'Mezzo ' + i + 1}}</div>
+                </div>
+                <div class="ml-1">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Mezzo" nbTooltipStatus="danger"
+                        nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <fieldset [disabled]="(isRivenditore && modifica) ? true : false">
+            <div class="row" [formGroupName]="i">
+                <div class="col-md-12">
+                    <label class="label">Seleziona un mezzo</label>
+                    <mat-form-field appearance="outline">
+                        <!-- <mat-label> Seleziona un mezzo </mat-label> -->
+                        <mat-select formControlName="idMezzo" (selectionChange)="aggMezzo($event.value)"
+                            placeholder="Seleziona il mezzo:">
+                            <mat-option>
+                                <ngx-mat-select-search placeholderLabel="Cerca Mezzo"
+                                    noEntriesFoundLabel="'Nessun mezzo trovato con questo identificativo'"
+                                    formControlName="autocomplete">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option value="addMezzo"> + Aggiungi nuovo mezzo... </mat-option>
+
+                            <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                [style.height.px]="45 * 5">
+                                <mat-option *cdkVirtualFor="let vehicle of filteredVehicles | async"
+                                    [value]="vehicle.id" (click)="isTouched(i)">
+                                    {{vehicle.identificativo}}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- <div class="form-group">
+                        <label class="label">Seleziona un mezzo</label>
+                        <nb-select fullWidth formControlName="idMezzo" placeholder="Seleziona il mezzo:"
+                            (selectedChange)="aggMezzo($event)">
+                            <nb-option value="addMezzo"> + Aggiungi nuovo Mezzo... </nb-option>
+                            <nb-option *ngFor="let item of arrayMezzi" value="{{item.id}}" (click)="isTouched(i)">
+                                {{item.identificativo}} </nb-option>
+                        </nb-select>
+                    </div> -->
+                </div>
+            </div>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

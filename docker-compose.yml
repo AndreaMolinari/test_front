@@ -1,4 +1,7 @@
-version: '3.7'
+version: '3.9'
+
+# █▄░█ █▀▀ ▀█▀ █░█░█ █▀█ █▀█ █▄▀ █▀
+# █░▀█ ██▄ ░█░ ▀▄▀▄▀ █▄█ █▀▄ █░█ ▄█
 
 networks:
   webgest_net:
@@ -6,8 +9,8 @@ networks:
 
 services:
   webgest: 
-    image: imatto/webgest:latest-serverino
-    restart: unless-stopped # dev only
+    build: 
+      context: .
     ports: 
       - 80
     networks:

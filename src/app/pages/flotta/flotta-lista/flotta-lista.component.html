@@ -1,0 +1,34 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Flotta</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)" (delete)="onDelete($event)"
+            [source]="source"></ng2-smart-table>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #delete_dialog let-data let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>
+            <h5 class="text-center">Sei sicuro di eliminare <strong>{{ data.data.id }}</strong></h5>
+        </nb-card-header>
+        <nb-card-body>
+            <p class="text-center">{{ data.data.nome }}</p>
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row">
+                <div class="col">
+                    <button nbButton status="primary" (click)="ref.close(0)">Annulla</button>
+                </div>
+                <div class="col text-right">
+                    <button nbButton status="danger" (click)="ref.close(1)">Elimina</button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

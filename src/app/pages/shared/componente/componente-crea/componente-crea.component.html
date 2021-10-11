@@ -1,0 +1,110 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>{{(modifica) ? 'Modifica Componente' : 'Aggiungi Componente'}}</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Componente" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let control of parentForm.controls; let i = index;"
+        [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Componente {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Componente"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> Unitcode </label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="unitcode"
+                        placeholder="Seriale">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> SIM </label>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="idSim" placeholder="Seleziona una SIM">
+                            <mat-option>
+                                <ngx-mat-select-search placeholderLabel="Cerca una SIM:"
+                                    noEntriesFoundLabel="'Nessuna SIM trovata con questo codice...'"
+                                    formControlName="autocompleteSim">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option [value]="null" *ngIf="control.get('idSim').value"> DISASSOCIA SIM </mat-option>
+                            <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                [style.height.px]="45 * 5">
+                                <mat-option *cdkVirtualFor="let sim of filteredSIMs[i] | async" [value]="sim.id">
+                                    {{sim.serial}}
+                                </mat-option>
+                            </cdk-virtual-scroll-viewport>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <label class="label"> Brand </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idBrand" placeholder="Seleziona un brand"
+                        (selectionChange)="modalAdd($event.value)">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un brand:"
+                                noEntriesFoundLabel="'Nessun brand trovato con questo nome...'"
+                                formControlName="autocompleteBrand">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addBrand"> + Aggiungi nuovo brand... </mat-option>
+                        <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                            [style.height.px]="45 * 5">
+                            <mat-option *cdkVirtualFor="let brand of filteredBrands[i] | async" [value]="brand.id">
+                                {{brand.marca}}
+                            </mat-option>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <label class="label"> Modello </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idModello" placeholder="Seleziona un modello"
+                        (selectionChange)="modalAdd($event.value)">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un modello:"
+                                noEntriesFoundLabel="'Nessun modello trovato con questo nome...'"
+                                formControlName="autocompleteModello">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addModello"> + Aggiungi nuovo modello... </mat-option>
+                        <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                            [style.height.px]="45 * 5">
+                            <mat-option *cdkVirtualFor="let model of filteredModels[i] | async" [value]="model.id">
+                                {{model.modello}}
+                            </mat-option>
+                        </cdk-virtual-scroll-viewport>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </nb-card-body>
+</nb-card>

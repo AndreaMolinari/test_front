@@ -1,0 +1,22 @@
+<nb-card [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+    <nb-card-header></nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <shared-componente-crea (outForm)="addFormGroup('componente', $event)" [parentForm]="myForm.get('componente')" [max]="1" [modifica]="modifica" [dataInstance]="apiComponente"></shared-componente-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-3">
+                <button nbButton form="myForm" fullWidth (click)="onReset()" status="warning">Resetta</button>
+            </div>
+            <div class="col-3 offset-6">
+                <button nbButton (click)="onSubmit()" fullWidth [disabled]="myForm.invalid" status="success">Submit</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

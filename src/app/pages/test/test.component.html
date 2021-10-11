@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card status="danger">
+            <nb-card-body>
+                <div class="flex-centered col-xl-4 col-lg-6 col-md-8 col-sm-12">
+                    <h2 class="title">Ops...</h2>
+                    <div class="sub-title">La pagina che cerchi non esiste [404 NotFound]</div>
+                    <button nbButton fullWidth class="home-button" status="primary">
+                        Torna alla Dashboard
+                    </button>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+
+Formone per i test:
+<nb-card>
+    <nb-card-header>
+        TUTTO TEST
+    </nb-card-header>
+    <nb-card-body>
+        <!-- <form [formGroup]="myForm">
+            <shared-modello-seleziona (outForm)="addFormGroup('modello', $event)" [parentForm]="myForm.get('modello')" ></shared-modello-seleziona>       
+        </form> -->
+        <!-- <form [formGroup]="myForm">
+            <angular2-multiselect [data]="dropdownList" [settings]="dropdownSettings" formControlName="componente">
+            </angular2-multiselect>
+        </form> -->
+
+        <form [formGroup]="myForm">
+            <nb-select fullWidth formControlName="mezzo" placeholder="Seleziona il mezzo:"
+                (selectedChange)="aggModello($event)">
+                <nb-option *ngFor="let item of arrayMezzi" [value]="item.id"> {{item.targa}} </nb-option>
+            </nb-select>
+        </form>
+
+        <!-- <form [formGroup]="myForm">
+            <nb-select fullWidth formControlName="mezzo" [ngModel]="veicoloModifica" placeholder="Seleziona il mezzo:" (selectedChange)="aggModello($event)">
+                <nb-option *ngFor="let item of arrayMezzi" value="item.id"> {{item.targa}} </nb-option>
+            </nb-select>
+        </form> -->
+
+    </nb-card-body>
+    <nb-card-footer>
+        <button nbButton fullWidth [disabled]="myForm.invalid" (click)="onSubmit()" status="danger">
+            Submit <nb-icon icon="done-all"></nb-icon>
+        </button>
+    </nb-card-footer>
+</nb-card>

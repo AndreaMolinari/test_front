@@ -1,0 +1,156 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Servizio</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Servizio" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Servizio {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Servizio"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <fieldset [disabled]="(isRivenditore && modifica) ? true : false">
+            <div class="row" [formGroupName]="i">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="label">Cliente</label>
+                        <mat-form-field appearance="outline">
+                            <mat-select formControlName="idAnagrafica"
+                                [disabled]="(modifica == true && globals.userRole !== 1) ? true : false"
+                                placeholder="Seleziona una anagrafica">
+                                <mat-option>
+                                    <ngx-mat-select-search placeholderLabel="Cerca anagrafica"
+                                        noEntriesFoundLabel="'Nessuna anagrafica trovata con questo nome'"
+                                        formControlName="autocomplete">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4" [maxBufferPx]="45 * 8"
+                                    [style.height.px]="45 * 5">
+                                    <mat-option *cdkVirtualFor="let anagrafica of filteredClients | async"
+                                        [value]="anagrafica.id">
+                                        {{anagrafica.nome}}
+                                    </mat-option>
+                                </cdk-virtual-scroll-viewport>
+
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row " [formGroupName]="i">
+                <div class="col-sm">
+                    <label class="label">Causale servizio</label>
+                    <nb-select fullWidth formControlName="idCausale" placeholder="Seleziona la causale del servizio">
+                        <nb-option *ngFor="let item of arrayCausali['all_children']" value="{{item.id}}">
+                            {{item.tipologia}}
+                        </nb-option>
+                    </nb-select>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label class="label">Periodicità di fatturazione</label>
+                        <nb-select fullWidth formControlName="idPeriodo" placeholder="Seleziona una periodicità">
+                            <nb-option *ngFor="let item of arrayCadenze['all_children']" value="{{item.id}}">
+                                {{item.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label class="label">Prezzo</label>
+                        <input nbInput fullWidth class="form-control" type="number" formControlName="prezzo"
+                            placeholder="Prezzo">
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label class="label">WebService</label>
+                        <nb-select fullWidth multiple formControlName="applicativo"
+                            placeholder="Seleziona un WebService"
+                            nbTooltip="Applicativo nel quale viene visualizzato il servizio" nbTooltipStatus="info"
+                            nbTooltipPlacement="bottom">
+                            <nb-option *ngFor="let item of arrayWebService['all_children']" value="{{item.id}}">
+                                {{item.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" [formGroupName]="i">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="label">Data inizio</label>
+                        <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker1"
+                            formControlName="dataInizio" placeholder="Data di inizio"
+                            nbTooltip="Verrà visualizzato dal giorno" nbTooltipStatus="info"
+                            nbTooltipPlacement="bottom">
+                        <nb-datepicker #datepicker1 format="D MMM YYYY"></nb-datepicker>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="label">Data di fine</label>
+                        <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker2"
+                            formControlName="dataFine" placeholder="Data di fine"
+                            nbTooltip="Smetterà di essere visualizzato dal giorno" nbTooltipStatus="info"
+                            nbTooltipPlacement="bottom">
+                        <nb-datepicker #datepicker2 format="D MMM YYYY"></nb-datepicker>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <nb-accordion>
+            <nb-accordion-item
+                [expanded]="(parentForm.at(0).get('dataSospInizio').value || parentForm.at(0).get('dataSospFine').value) ? true : false">
+                <nb-accordion-item-header> Sospensione canone </nb-accordion-item-header>
+                <nb-accordion-item-body>
+                    <div class="row" [formGroupName]="i">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="label">Inizio sospensione canone</label>
+                                <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker3"
+                                    formControlName="dataSospInizio" placeholder="Inizio sospensione canone"
+                                    nbTooltip="Da questo giorno il servizio non entra in fatturazione"
+                                    nbTooltipStatus="info" nbTooltipPlacement="bottom">
+                                <nb-datepicker #datepicker3 format="D MMM YYYY"></nb-datepicker>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="label">Fine sospensione canone</label>
+                                <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker4"
+                                    formControlName="dataSospFine" placeholder="Fine sospensione canone"
+                                    nbTooltip="Da questo giorno il servizio rientra in fatturazione"
+                                    nbTooltipStatus="info" nbTooltipPlacement="bottom">
+                                <nb-datepicker #datepicker4 format="D MMM YYYY"></nb-datepicker>
+                            </div>
+                        </div>
+                    </div>
+                </nb-accordion-item-body>
+            </nb-accordion-item>
+        </nb-accordion>
+    </nb-card-body>
+</nb-card>

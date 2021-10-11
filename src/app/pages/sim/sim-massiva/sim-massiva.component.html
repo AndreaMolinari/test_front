@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-header> <h5> Inserimento massivo di componenti e SIM </h5> </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-12 text-center">
+                <b> Carica un file .CSV per visualizzare i dati in tabella </b>
+            </div>
+        </div>
+        <div class="row" style="margin: 2rem;">
+            <div class="col-12 text-center">
+                <input type="file" placeholder="Per cominciare caricare un file .CSV..." accept=".csv"
+                    (change)="loadFile($event)">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ng2-smart-table [source]="source" [settings]="settings" (delete)="onDelete($event.data)"></ng2-smart-table>
+            </div>
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="offset-8 col-4 text-right">
+                <button nbButton status="success" (click)="submit()"> Conferma inserimento </button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

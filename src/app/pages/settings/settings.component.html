@@ -1,0 +1,41 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-4 text-left">
+                <button nbButton size="small" (click)="goBack()" status="primary">
+                    <nb-icon icon="arrow-back"></nb-icon>
+                    Indietro
+                </button>
+            </div>
+            <div class="col-4">
+                Impostazioni di WEBGEST
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+
+        <div class="row">
+            <div class="col-md-4">
+                <nb-card>
+                    <nb-card-header>
+                        Impostazioni tema
+                    </nb-card-header>
+                    <nb-card-body>
+                        <div class="row" layout-align="center center">
+                            <ng-container *ngFor="let item of temi">
+                                <div class="col-md-6">
+                                    <button nbButton fullWidth (click)="cambiaTema(item)"
+                                        status="primary">{{item.tema}}</button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+
+    </nb-card-body>
+    <nb-card-footer>
+        {{now}}
+    </nb-card-footer>
+</nb-card>

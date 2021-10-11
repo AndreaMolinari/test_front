@@ -1,0 +1,34 @@
+:host /deep/ table {
+    td.ng2-smart-actions {
+        ng2-st-tbody-custom {
+            i {
+                font-size: 30px;
+            }
+
+            a {
+                &:hover {
+                    color: #598bff;
+                }
+            }
+        }
+    }
+}
+
+
+:host /deep/ ng2-smart-table {
+
+    .sottoCliente {
+        &:nth-child(odd) {
+            background-color: rgba(70, 24, 49, .5) !important;
+        }
+        
+        &:nth-child(even) {
+            background-color: rgba(70, 24, 49, .7) !important;
+        }
+        
+        &:hover {
+            background-color: rgba(70, 24, 49, 1) !important;
+        }
+    }
+
+}

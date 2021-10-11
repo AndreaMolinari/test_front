@@ -1,0 +1,230 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Utente</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+                <div *ngIf="env.debug">
+                    Tipologia: {{ (parentForm.length > 0) ? parentForm.at(0).get('idTipologia').valid : ''}}
+                    Username: {{ (parentForm.length > 0) ? parentForm.at(0).get('username').valid : ''}}
+                    Password: {{ (parentForm.length > 0) ? parentForm.at(0).get('password').valid : ''}}
+                    Password_conf:
+                    {{ (parentForm.length > 0) ? parentForm.at(0).get('password_confirmation').valid : ''}}
+
+                    Password: {{(parentForm.length > 0) ? (parentForm.at(0).get('password').errors | json) : ''}}
+                </div>
+            </div>
+            <div class="ml-1" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" hero (click)="add()" nbTooltip="Aggiungi Utente" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0, dialog)" nbTooltip="Rimuovi Utente"
+                    nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let user of parentForm.controls; let u = index;">
+        <fieldset [formGroupName]="u">
+            <ng-container *ngIf="u > 0">
+                <hr class="multiformSpacer">
+                <div class="row">
+                    <div class="col-8 col-md-10">
+                        <h6>Utente {{u + 1}}</h6>
+                        <div *ngIf="env.debug">
+                            Tipologia: {{ (parentForm.length > 0) ? parentForm.at(u).get('idTipologia').valid : ''}}
+                            Username: {{ (parentForm.length > 0) ? parentForm.at(u).get('username').valid : ''}}
+                            Password: {{ (parentForm.length > 0) ? parentForm.at(u).get('password').valid : ''}}
+                            Password_conf:
+                            {{ (parentForm.length > 0) ? parentForm.at(u).get('password_confirmation').valid : ''}}
+
+                            Password: {{user.get('password').errors | json}}
+                        </div>
+                    </div>
+                    <div class="col-4 col-md-2 text-right">
+                        <button nbButton size="tiny" hero (click)="remove(u, dialog)" nbTooltip="Rimuovi Utente"
+                            nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                            <nb-icon icon="minus"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="row" *ngIf="origin === 'crud'">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="label">Anagrafica {{userRole}}</label>
+                        <mat-form-field appearance="outline">
+                            <mat-select formControlName="idAnagrafica"
+                                [disabled]="(modifica === true && parentForm.at(0).get('idAnagrafica').value !== null) ? ((userRole > 1) ? true : false) : false"
+                                placeholder="Seleziona una anagrafica">
+                                <mat-option>
+                                    <ngx-mat-select-search placeholderLabel="Cerca anagrafica"
+                                        noEntriesFoundLabel="'Nessuna anagrafica trovata con questo nome'"
+                                        formControlName="autocompleteAnagrafica" ngModel
+                                        (ngModelChange)="customSearch(u)">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let anagrafica of arrayAnagraficheFiltered | async"
+                                    [value]="anagrafica['id']"> {{anagrafica['nome']}} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="label">Tipologia</label>
+                        <nb-select fullWidth formControlName="idTipologia"
+                            placeholder="Seleziona la tipologia di account" (selectedChange)="isTouched(u)"
+                            [disabled]="!canSetTypos">
+                            <nb-option (click)="unTouche(u)"> Seleziona la tipologia di account </nb-option>
+                            <nb-option *ngFor="let item of tipologieUtente" value="{{item.id}}"> {{item.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="label">Username</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="username"
+                            nbTooltip="Minimo 2 caratteri" nbTooltipIcon="alert-triangle" nbTooltipStatus="danger"
+                            placeholder="Username" [status]="(usernameStatus[u] ? usernameStatus[u] : 'basic' )"
+                            (input)="$event.target.value.length < 2 && isTouched(u); $event.target.value.length == 0 && unTouche(u)"
+                            (focusout)="checkUsername($event.target.value, u)">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="label">E-Mail</label>
+                        <input nbInput fullWidth class="form-control" type="email" formControlName="email"
+                            placeholder="user e-mail"
+                            [status]="(!this.parentForm.at(u).get('email').valid) ? 'danger' : ''"
+                            (input)="$event.target.value.length < 2 && isTouched(u); $event.target.value.length == 0 && unTouche(u)">
+                    </div>
+                </div>
+            </div>
+            <ng-container [ngSwitch]="confermaPassword[u]">
+                <!-- <div *ngSwitchCase="true">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label class="label">Password</label>
+                                <input nbInput fullWidth class="form-control" [type]="inputType"
+                                    formControlName="password" nbTooltip="Minimo 6 caratteri"
+                                    nbTooltipIcon="alert-triangle" nbTooltipStatus="danger" placeholder="Password"
+                                    (input)="$event.target.value.length < 2 && isTouched(u) || $event.target.value.length == 0 && unTouche(u)">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <nb-icon [icon]="passwordIcon" class="checkbox" (click)="showPassword()"></nb-icon>
+                        </div>
+                    </div>
+                </div> -->
+                <div *ngSwitchDefault>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="label">Password</label>
+                                <div class="input-group">
+                                    <input class="form-control" nbInput fullWidth class="form-control"
+                                        [type]="inputType[u]" formControlName="password" nbTooltip="Minimo 6 caratteri"
+                                        nbTooltipIcon="alert-triangle" nbTooltipStatus="danger" placeholder="Password"
+                                        autocomplete="new-password"
+                                        (input)="$event.target.value.length < 2 && isTouched(u); $event.target.value.length == 0 && unTouche(u); verificaPassword(u)">
+                                    <nb-icon style="margin: .5rem .1rem;" nbSuffix [icon]="passwordIcon[u]"
+                                        class="input-group-addon" (click)="showPassword(u)"></nb-icon>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="label">Conferma password</label>
+                                <input nbInput fullWidth class="form-control" type="password"
+                                    formControlName="password_confirmation" autocomplete="new-password"
+                                    [status]="(passwordStatus[u] ? passwordStatus[u] : 'basic' )"
+                                    placeholder="Conferma Password" (input)="verificaPassword(u)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="row" style="text-align: center;">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <nb-checkbox formControlName="bloccato" status="danger">Bloccato</nb-checkbox>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <nb-checkbox formControlName="hasActia" (checkedChange)="actiaUser(u, $event)">Actia User
+                    </nb-checkbox>
+                </div>
+            </div>
+            <ng-container *ngIf="hasActia[u] == true">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="label">Actia Mail</label>
+                            <input nbInput fullWidth class="form-control" type="mail" formControlName="actiaMail"
+                                placeholder="Actia Mail">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">Actia Username</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="actiaUser"
+                                placeholder="Actia Username">
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="label">Actia Password</label>
+                            <input nbInput fullWidth class="form-control" [type]="inputType"
+                                formControlName="actiaPassword" placeholder="Actia Password"
+                                autocomplete="new-password">
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <nb-icon [icon]="passwordIcon" class="checkbox" (click)="showPassword(u)"></nb-icon>
+                    </div>
+                </div>
+            </ng-container>
+        </fieldset>
+        <div class="row" *ngIf="origin == 'crud'">
+            <div class="col-12">
+                <ng2-smart-table *ngIf="modifica == true" [settings]="settingsFlotta" (edit)="onEditFlotta($event)"
+                    [source]="sourceFlotta">
+                </ng2-smart-table>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+    <nb-card status="danger">
+        <nb-card-header class="text-center">Conferma operazione</nb-card-header>
+        <nb-card-body>
+            <p class="spazio text-center"> SEI SICURO DI VOLER <br> CANCELLARE UN UTENTE? </p>
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row spazio">
+                <div class="col-6">
+                    <button nbButton (click)="ref.close(false)" status="primary">Annulla</button>
+                </div>
+                <div class="col-6 text-right">
+                    <button nbButton status="danger" (click)="ref.close(true)" status="danger">Conferma</button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

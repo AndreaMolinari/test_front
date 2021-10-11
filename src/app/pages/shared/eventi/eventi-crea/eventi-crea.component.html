@@ -1,0 +1,56 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Eventi</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Evento" nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let contact of parentForm.controls; let c = index;">
+        <ng-container *ngIf="c > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Evento {{c + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(c)" nbTooltip="Rimuovi Evento" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="c">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Messaggio</label>
+                    <textarea nbInput fullWidth class="form-control" type="text"
+                        formControlName="messaggio"
+                        placeholder="Messaggio"
+                    ></textarea>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Codice</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="codice"
+                    placeholder="Codice">
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="c">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="label">M/E</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="me"
+                    placeholder="M/E">
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

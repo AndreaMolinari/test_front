@@ -1,0 +1,22 @@
+<!-- <ng-container [ngSwitch]="true">
+        <div *ngSwitchCase="this.value.tachigrafo == '--' || this.value.tacho[0] == undefined || this.value.tacho[0].idTacho == null"
+            class="notALink" (click)="reroute()">{{value.tachigrafo}}</div>
+        <div *ngSwitchDefault class="underline">
+            {{value.tachigrafo}}
+            <nb-icon icon="edit-outline" (click)="reroute()"></nb-icon>
+        </div>
+    </ng-container> -->
+
+<ng-container [ngSwitch]="value !== 'RADIOCOMANDO' && value.tacho.length > 0">
+    <div *ngSwitchCase="true">
+        <div *ngFor="let comp of value.tacho" class="underline">
+            {{comp.unitcode}}
+            <nb-icon (click)="reroute(comp.idTacho)" icon="edit-outline"></nb-icon>
+        </div>
+    </div>
+
+    <div *ngSwitchDefault class="notALink" (click)="reroute()">
+        {{(value.tachigrafo) ? value.tachigrafo : value}}
+    </div>
+
+</ng-container>

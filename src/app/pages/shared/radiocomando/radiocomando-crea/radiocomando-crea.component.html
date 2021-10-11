@@ -1,0 +1,48 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Aggiungi Radiocomando</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Radiocomando" nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Radiocomando {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Radiocomando" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+            <div class="row" [formGroupName]="i">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <nb-select
+                            fullWidth
+                            formControlName="idModello"
+                            placeholder="Seleziona il modello:">
+                                <nb-option *ngFor="let item of arrayModello" [value]="item.id"> {{item.modello}} </nb-option>
+                            </nb-select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input nbInput fullWidth class="form-control" type="text"
+                            formControlName="unitcode"
+                            placeholder="Seriale">
+                    </div>
+                </div>
+            </div>
+    </nb-card-body>
+</nb-card>

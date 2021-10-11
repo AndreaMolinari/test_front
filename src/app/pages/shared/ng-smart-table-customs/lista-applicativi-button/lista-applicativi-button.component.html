@@ -1,0 +1,2 @@
+<span> {{(value.applicativo.length > 0) ? value.applicativo[0].applicativo : 'n/a'}} </span>
+<span *ngIf="value.applicativo.length > 1" [nbTooltip]="applicativi" nbTooltipStatus="info" nbTooltipPlacement="bottom"> ... </span>

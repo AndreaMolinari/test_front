@@ -1,0 +1,40 @@
+.headerContent {
+    display    : flex;
+    align-items: center;
+    width      : auto;
+
+    .sidebar-toggle {
+        color: nb-theme(text-hint-color);
+
+        nb-icon {
+            font-size: 1.75rem;
+        }
+    }
+
+    .logo {
+        padding        : 0 1.25rem;
+        font-size      : 1.75rem;
+        white-space    : nowrap;
+        text-decoration: none;
+    }
+
+
+}
+
+.actions {
+    position: fixed;
+    right   : 1rem;
+    top     : 1.6rem;
+}
+
+.test {
+    border: 5px solid orange;
+}
+
+.header {
+    background-color: #FF5E1C;
+}
+
+.headerSimone {
+    background-color: #10a335;
+}

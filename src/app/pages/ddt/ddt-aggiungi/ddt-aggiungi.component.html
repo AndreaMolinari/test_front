@@ -1,0 +1,27 @@
+<nb-card>
+    <nb-card-header>
+        <button nbButton size="small" (click)="goBack()" status="primary">
+            <nb-icon icon="arrow-back"></nb-icon>
+            Indietro
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <shared-ddt-crea (outForm)="addFormGroup('ddt', $event)" [parentForm]="myForm.get('ddt')" [modifica]="modifica" [dataInstance]="'nonCiSonoAPI'" [max]="1"></shared-ddt-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-md-3">
+                <button nbButton fullWidth form="myForm" (click)="onReset()" status="warning">Resetta i campi</button>
+            </div>
+            <div class="col-md-3 offset-6">
+                <button nbButton fullWidth form="myForm" (click)="onSubmit()" [disabled]="myForm.invalid" status="success">Salva DDT</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

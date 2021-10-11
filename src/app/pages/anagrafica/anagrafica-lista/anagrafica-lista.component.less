@@ -1,0 +1,63 @@
+// :host /deep/ ng2-st-tbody-custom a.ng2-smart-action.ng2-smart-action-custom-custom {
+//     display   : inline-block;
+//     width     : 200px;
+//     text-align: center;
+// }
+
+// :host /deep/ table{
+//     th.ng2-smart-actions{
+//         width: 180px;
+//     }
+//     td.ng2-smart-actions{
+//         display  : flex;
+//         border   : none;
+//         // height: 0px;
+//         ng2-st-tbody-edit-delete, ng2-st-tbody-create-cancel, ng2-st-tbody-custom
+//         {
+//             display     : flex;
+//             padding-top : 10px;
+//             padding-left: 12px;
+//             i {
+//                 font-size: 30px;
+//             }
+//             a{
+//                 display : inline-block !important;
+//                 // width: 45px;
+//                 &       :hover{
+//                     color: #598bff;
+//                 }
+//             }
+//         }
+//     }
+// }
+
+:host /deep/ table {
+
+    ng2-st-tbody-edit-delete,
+    ng2-st-tbody-create-cancel,
+    ng2-st-tbody-custom {
+        a {
+            & :hover {
+                color: #598bff;
+            }
+        }
+    }
+}
+
+:host /deep/ ng2-smart-table {
+
+    .sottoCliente {
+        &:nth-child(odd) {
+            background-color: rgba(70, 24, 49, .6) !important;
+        }
+
+        &:nth-child(even) {
+            background-color: rgba(70, 24, 49, .8) !important;
+        }
+
+        &:hover {
+            background-color: rgba(70, 24, 49, 1) !important;
+        }
+    }
+
+}

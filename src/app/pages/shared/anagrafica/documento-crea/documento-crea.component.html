@@ -1,0 +1,77 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Carica documento</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" hero (click)="add()" nbTooltip="Aggiungi Documento"
+                    nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <h6>Contatto {{i + 1}}</h6>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" hero (click)="remove(i)" nbTooltip="Rimuovi Documento"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="label">Tipologia</label>
+                    <nb-select fullWidth placeholder="Seleziona la tipologia" formControlName="idTipologia">
+                        <nb-option> Seleziona la tipologia </nb-option>
+                        <nb-option> Tipologia 1 </nb-option>
+                        <nb-option> Tipologia 2 </nb-option>
+                        <nb-option> Tipologia 3 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Seriale</label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="seriale"
+                        placeholder="Identificativo documento">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> Scadenza documento </label>
+                    <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker1"
+                        formControlName="dataScadenza" placeholder="Data scadenza"
+                        nbTooltip="Alla scadenza della data specificat asarà richiesto un nuovo documento"
+                        nbTooltipStatus="info" nbTooltipPlacement="bottom">
+                    <nb-datepicker #datepicker1 format="D MMM YYYY"></nb-datepicker>
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i" style="text-align: center; margin: 0.2rem;">
+            <div class="col-12">
+                <input type="file" (change)="caricaFile($event, i)">
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="label">Descrizione</label>
+                    <textarea nbInput fullWidth class="form-control" type="text" formControlName="descrizione"
+                        placeholder="Descrizione"></textarea>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

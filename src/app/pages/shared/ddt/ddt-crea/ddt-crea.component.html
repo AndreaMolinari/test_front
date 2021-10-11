@@ -1,0 +1,130 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <ng-container [ngSwitch]="true">
+                    <h5 *ngSwitchDefault>Crea Documento di Trasporto</h5>
+                    <h5 *ngSwitchCase="modifica == true">Modifica Documenti di Trasporto</h5>
+                </ng-container>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi DDT" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">DDT {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi DDT" nbTooltipStatus="danger"
+                        nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Cliente </label>
+                    <nb-select fullWidth placeholder="Seleziona il cliente">
+                        <nb-option value="1"> Anagrafica 1 </nb-option>
+                        <nb-option value="2"> Anagrafica 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Indirizzo </label>
+                    <nb-select fullWidth placeholder="Seleziona un indirizzo">
+                        <nb-option [value]="null"> Aggiungi indirizzo </nb-option>
+                        <nb-option value="1"> Indirizzo 1 </nb-option>
+                        <nb-option value="2"> Indirizzo 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Causale </label>
+                    <nb-select fullWidth placeholder="Seleziona una causale">
+                        <nb-option value="1"> Causale 1 </nb-option>
+                        <nb-option value="2"> Causale 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label class="label">Data spedizione</label>
+                    <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker1"
+                        placeholder="Data di spedizione">
+                    <nb-datepicker #datepicker1 format="D MMM YYYY"></nb-datepicker>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="label"> Aspetto </label>
+                    <nb-select fullWidth placeholder="Seleziona una aspetto">
+                        <nb-option value="1"> Aspetto 1 </nb-option>
+                        <nb-option value="2"> Aspetto 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="label"> Numero colli </label>
+                    <input nbInput fullWidth type="number">
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label class="label"> Peso </label>
+                    <input nbInput fullWidth type="number">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="label"> Trasporto </label>
+                    <nb-select fullWidth placeholder="Seleziona una trasporto">
+                        <nb-option value="1"> Trasporto 1 </nb-option>
+                        <nb-option value="2"> Trasporto 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="label"> Costo di spedizione </label>
+                    <input nbInput fullWidth type="number">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            NOTE
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <mat-form-field style="width: 100%;" appearance="outline">
+                    <mat-label> Componente </mat-label>
+                    <input type="text" placeholder="Componente" matInput [matAutocomplete]="auto"
+                        [formControl]="selectComponenti" color="accent">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let componente of arrayComponentiFiltered | async"
+                            [value]="componente['unitcode']">
+                            {{componente['unitcode']}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

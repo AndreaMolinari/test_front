@@ -1,0 +1,102 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>{{(modifica) ? 'Modifica Tachigrago' : 'Aggiungi Tachigrafo'}}</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Tachigrafo" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;"
+        [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Tachigrafo {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Tachigrafo"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <label class="label"> Seleziona un Brand </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idBrand"
+                        (selectionChange)="modalAdd($event.value); ($event.value !== 'addBrand') ? getModelli($event.value) : ''"
+                        placeholder="Seleziona un brand">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un brand..."
+                                noEntriesFoundLabel="'Nessun brand trovato con questo nome'"
+                                formControlName="autocompleteBrand" ngModel (ngModelChange)="customSearchBrand(i)">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addBrand"> + Aggiungi nuovo brand... </mat-option>
+                        <mat-option *ngFor="let brand of arrayBrandFiltered | async" [value]="brand.id">
+                            {{brand.marca}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+
+                <label class="label"> Seleziona un modello </label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="idModello" (selectionChange)="modalAdd($event.value)"
+                        placeholder="Seleziona un modello">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Cerca un modello..."
+                                noEntriesFoundLabel="'Nessun modello trovato con questo nome'"
+                                formControlName="autocompleteModello" ngModel (ngModelChange)="customSearchModello(i)">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option value="addModello"> + Aggiungi nuovo modello... </mat-option>
+                        <mat-option *ngFor="let modello of arrayModelloFiltered | async" [value]="modello.id">
+                            {{modello.modello}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> Unitcode </label>
+                    <input nbInput fullWidth class="form-control" type="text" formControlName="unitcode"
+                        placeholder="Seriale">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+
+                    <label class="label"> Seleziona una SIM </label>
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="idSim" (selectionChange)="modalAdd($event.value)"
+                            placeholder="Seleziona una SIM">
+                            <mat-option>
+                                <ngx-mat-select-search placeholderLabel="Cerca una SIM..."
+                                    noEntriesFoundLabel="'Nessuna SIM trovato con questo iMei'"
+                                    formControlName="autocompleteSim" ngModel (ngModelChange)="customSearchSim(i)">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option value="addSIM"> + Aggiungi nuova SIM... </mat-option>
+                            <mat-option *ngFor="let sim of arraySIMFiltered | async" [value]="sim.id">
+                                {{sim.serial}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

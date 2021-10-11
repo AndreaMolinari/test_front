@@ -1,0 +1,13 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <h5>Flotta</h5>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)" [source]="source">
+        </ng2-smart-table>
+    </nb-card-body>
+</nb-card>

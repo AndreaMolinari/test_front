@@ -1,0 +1,54 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Nota</h5>
+            </div>
+            <div class="ml-1" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Nota" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1" *ngIf="parentForm.length > 0">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Note" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let n = index;">
+        <ng-container *ngIf="n > 0">
+            <hr class="multiformSpacer">
+            <div class="d-flex">
+                <div class="flex-grow-1">
+                    <div class="h6">Note {{n + 1}}</div>
+                </div>
+                <div class="ml-1">
+                    <button nbButton size="tiny" (click)="remove(n)" nbTooltip="Rimuovi Nota" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <fieldset [formGroupName]="n" [disabled]="(env.rivenditore == true && modifica == true) ? true : false">
+            <div class="row mt-1">
+                <div class="col-12">
+                    <div class="form-group">
+                        <textarea nbInput fullWidth class="form-control" type="text" formControlName="testo"
+                            placeholder="Note"></textarea>
+                        <div class="row" *ngIf="modifica == true">
+                            <div class="col-6 text-left">
+                                {{operatore[n]}}
+                            </div>
+                            <div class="col-6 text-right">
+                                {{dataModifica[n]}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

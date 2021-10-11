@@ -1,0 +1,87 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6">
+                <ng-container [ngSwitch]="true">
+                    <div *ngSwitchCase="listaAnagrafica == true">
+                        <button nbButton size="small" (click)="goBack()" status="primary">
+                            <nb-icon icon="arrow-back"></nb-icon>
+                            Indietro
+                        </button>
+                    </div>
+                    <div *ngSwitchDefault>
+                        <h5> {{(origine !== 'dashboard') ? 'Servizio' : 'Ultimi 5 servizi'}} </h5>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-6 text-right" *ngIf="origine !== 'dashboard'">
+                <button nbButton (click)="downloadCSV()" [nbSpinner]="loadingData" nbSpinnerSize="giant"
+                    nbSpinnerStatus="primary" status="primary">
+                    <nb-icon icon="cloud-download-outline"></nb-icon>Export CSV
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng-container [ngSwitch]="true">
+            <div *ngSwitchCase="idAnagrafica !== null">
+                <ng2-smart-table [settings]="settingsAnagrafica" (create)="onCreate()" (edit)="onEdit($event)"
+                    (delete)="onDelete($event)" [source]="source" (userRowSelect)="onUserRowSelect($event)">
+                </ng2-smart-table>
+            </div>
+            <div *ngSwitchDefault>
+                <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)"
+                    (delete)="onDelete($event)" [source]="source">
+                </ng2-smart-table>
+            </div>
+
+        </ng-container>
+    </nb-card-body>
+    <nb-card-footer *ngIf="origine !== 'dashboard'">
+        <ng-container [ngSwitch]="true">
+            <div class="row text-center" *ngIf="multiModifica == true">
+                <div class="col-12">
+                    <button nbButton (click)="dialogMultiModifica()" status="danger">Modifica massivamente</button>
+                </div>
+            </div>
+            <div class="row" style="text-align: center;" *ngSwitchCase="listaAnagrafica == true">
+                <div class="col-md-6">
+                    <b>Cliente:</b> {{anagrafica}}
+                </div>
+                <div class="col-md-6">
+                    <b>Conteggio servizi:</b> {{qtaServizi}}
+                </div>
+            </div>
+            <div class="row" style="text-align: center;" *ngSwitchDefault>
+                <div class="col-md-12">
+                    <b>Conteggio servizi:</b> {{qtaServizi}}
+                </div>
+            </div>
+        </ng-container>
+    </nb-card-footer>
+</nb-card>
+
+<ng-template #delete_dialog let-data let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header>
+            <h5 class="text-center">Sei sicuro di eliminare <strong>{{ data.data.id }}</strong></h5>
+        </nb-card-header>
+        <nb-card-body>
+                <p>Anagrafica: {{ data.data.anagrafica }}</p>
+                <p>Attivo dal {{ data.data.dataInizio }} al {{ data.data.dataFine }}</p>
+                <p>Mezzo: {{ data.data.veicolo }}</p>
+                <p>GPS: {{ data.data.periferica }}</p>
+                <p>Tacho: {{ data.data.tachigrafo }}</p>
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row">
+                <div class="col">
+                    <button nbButton status="primary" (click)="ref.close(0)">Annulla</button>
+                </div>
+                <div class="col text-right">
+                    <button nbButton status="danger" (click)="ref.close(1)" >Elimina</button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

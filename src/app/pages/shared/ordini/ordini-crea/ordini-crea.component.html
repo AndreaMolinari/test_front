@@ -1,0 +1,92 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <ng-container [ngSwitch]="true">
+                    <h5 *ngSwitchDefault>Crea Ordine</h5>
+                    <h5 *ngSwitchCase="modifica == true">Modifica Ordine</h5>
+                </ng-container>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Ordini" nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Ordine {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Ordine" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> Commerciale </label>
+                    <nb-select fullWidth placeholder="Seleziona il commerciale">
+                        <nb-option value="1"> Anagrafica 1 </nb-option>
+                        <nb-option value="2"> Anagrafica 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label"> Cliente </label>
+                    <nb-select fullWidth placeholder="Seleziona il cliente">
+                        <nb-option value="1"> Anagrafica 1 </nb-option>
+                        <nb-option value="2"> Anagrafica 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Tipologia componente </label>
+                    <nb-select fullWidth placeholder="Seleziona la tipologia">
+                        <nb-option value="1"> Tipologia 1 </nb-option>
+                        <nb-option value="2"> Tipologia 2 </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Modello </label>
+                    <nb-select fullWidth placeholder="Seleziona il brand">
+                        <nb-option-group title="Brand 1">
+                            <nb-option value="1"> Modello 1.1 </nb-option>
+                            <nb-option value="2"> Modello 1.2 </nb-option>
+                        </nb-option-group>
+                        <nb-option-group title="Brand 2">
+                            <nb-option value="1"> Modello 2.1 </nb-option>
+                            <nb-option value="2"> Modello 2.2 </nb-option>
+                        </nb-option-group>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="label"> Quantità </label>
+                    <nb-select fullWidth placeholder="Seleziona la quantità">
+                        <nb-option value="1"> x1 </nb-option>
+                        <nb-option value="5"> x5 </nb-option>
+                        <nb-option value="10"> x10 </nb-option>
+                        <nb-option value="20"> x20 </nb-option>
+                        <nb-option value="40"> x40 </nb-option>
+                        <nb-option value="100"> x100 </nb-option>
+                        <nb-option value="custom"> Personalizza </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

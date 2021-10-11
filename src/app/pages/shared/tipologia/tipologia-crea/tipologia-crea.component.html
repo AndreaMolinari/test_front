@@ -1,0 +1,71 @@
+<nb-card [formGroup]="questoForm">
+        <nb-card-header>
+            <div class="row">
+                <div class="col-8 col-md-10">
+                    <h5>Aggiungi Tipologia</h5>
+                </div>
+                <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                    <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Tipologia" nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                        <nb-icon icon="plus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </nb-card-header>
+        <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+            <ng-container *ngIf="i > 0">
+                <hr class="multiformSpacer">
+                <div class="row mb-1">
+                    <div class="col-8 col-md-10">
+                        <div class="h6">Tipologia {{i + 1}}</div>
+                    </div>
+                    <div class="col-4 col-md-2 text-right">
+                        <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Tipologia" nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                            <nb-icon icon="minus"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">Seleziona l'origine:</label>
+                            <nb-select
+                                fullWidth
+                                formControlName="idParent"
+                                placeholder="Seleziona l'origine:" >
+                                <nb-option *ngFor="let item of arrayParent" value="{{item.id}}">{{item.tipologia}}</nb-option>
+                            </nb-select>
+                            <!-- <nb-select
+                                fullWidth
+                                formControlName="idParent"
+                                placeholder="Seleziona l'origine:" >
+                                <nb-option-group *ngFor="let z = index, let item of arrayParent" title="{{item.tipologia}}">
+                                    <nb-option *ngFor="let item of arrayParent[z].all_children" value="{{item.id}}"> {{item.tipologia}} </nb-option>
+                                </nb-option-group>
+                                <nb-option *ngFor="let item of arrayParent[z].all_children" value="{{item.id}}"> {{item.tipologia}} </nb-option>
+                            </nb-select> -->
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">Tipologia:</label>
+                            <input nbInput fullWidth class="form-control" type="text"
+                                formControlName="tipologia"
+                                placeholder="Tipologia">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-12">
+                        <label class="label">Descrizione:</label>
+                        <div class="form-group">
+                            <textarea nbInput fullWidth class="form-control" type="text"
+                            formControlName="descrizione"
+                            placeholder="Descrizione"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+        </nb-card-body>
+    </nb-card>

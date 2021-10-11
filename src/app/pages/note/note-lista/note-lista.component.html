@@ -1,0 +1,13 @@
+<nb-card>
+    <nb-card-header>
+        Note
+    </nb-card-header>
+    <nb-card-body>
+        <ng2-smart-table
+        [settings]="settings"
+        (create)="onCreate()"
+        (edit)="onEdit($event)"
+        [source]="source"
+        ></ng2-smart-table>
+    </nb-card-body>
+</nb-card>

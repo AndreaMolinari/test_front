@@ -1,0 +1,113 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>Flotta</h5>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Flotta" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let contact of parentForm.controls; let c = index;">
+        <ng-container *ngIf="c > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Flotta {{c + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(c)" nbTooltip="Rimuovi Flotta" nbTooltipStatus="danger"
+                        nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="c">
+            <fieldset class="col-md-6" [disabled]="isRivenditore">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="label">Nickname Flotta</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="nome"
+                                placeholder="Nome flotta">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="label">Descrizione</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="descrizione"
+                                placeholder="Descrizione">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="label">Icona di default</label>
+                            <nb-select select-text-font-family="Record-Font" fullWidth formControlName="defaultIcon"
+                                placeholder="Icona di default">
+                                <nb-select-label>
+                                    <i class="recordfont" [innerHTML]="parentForm.at(0).get('defaultIcon').value"></i>
+                                </nb-select-label>
+                                <nb-option *ngFor="let icona of icons" value="{{icona.value}}">
+                                    <i class="recordfont" [innerHTML]="icona.value"></i> {{icona.title}}
+                                </nb-option>
+                            </nb-select>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="col-md-6">
+                <nb-card>
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Utenti</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button *ngIf="!isRivenditore" nbButton size="small"
+                                    (click)="onCreateUtente()" status="primary">+</button>
+                            </div>
+                        </div>
+                    </nb-card-header>
+                    <nb-card-body>
+                        <ng2-smart-table [settings]="settingsUtente" (createConfirm)="onCreateUtente()"
+                            (editConfirm)="onEditUtente($event)" (deleteConfirm)="onDeleteUtente($event)"
+                            [source]="sourceUtente">
+                        </ng2-smart-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+        <div class="row checkbox">
+            <div class="col-12">
+                <nb-card>
+                    <nb-card-header>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Servizi</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button *ngIf="!isRivenditore" nbButton size="small"
+                                    (click)="onCreateServizio()" status="primary">+</button>
+                            </div>
+                        </div>
+                    </nb-card-header>
+                    <nb-card-body>
+                        <ng2-smart-table [settings]="settingsServizio" (createConfirm)="onCreateServizio()"
+                            (editConfirm)="onEditServizio($event)" (deleteConfirm)="onDeleteServizio($event)"
+                            [source]="sourceServizio">
+                        </ng2-smart-table>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

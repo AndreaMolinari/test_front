@@ -1,0 +1,44 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6 text-left">
+                <button nbButton size="small" (click)="goBack()" status="primary">
+                    <nb-icon icon="arrow-back"></nb-icon>
+                    Indietro
+                </button>
+            </div>
+            <div class="col-6 text-right">
+                <button nbButton (click)="onMassiveCreate()" status="primary"> + Aggiunta massiva </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-12">
+                    <shared-componente-crea (outForm)="addFormGroup('componente', $event)"
+                        [parentForm]="myForm.get('componente')" [dataInstance]="apiComponente" [modifica]="modifica"
+                        [max]=1></shared-componente-crea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <shared-note-crea (outForm)="addFormGroup('note', $event)" [parentForm]="myForm.get('note')"
+                        [dataInstance]="apiComponente" [modifica]="modifica" [origin]="'api'"></shared-note-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-md-3">
+                <button nbButton form="myForm" fullWidth (click)="onReset()" status="warning">Resetta i
+                    campi</button>
+            </div>
+            <div class="col-md-3 offset-6">
+                <button nbButton (click)="onSubmit()" fullWidth [disabled]="myForm.invalid" status="success">Salva
+                    componente</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

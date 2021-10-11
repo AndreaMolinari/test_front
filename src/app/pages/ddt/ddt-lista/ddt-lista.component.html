@@ -1,0 +1,9 @@
+<nb-card>
+    <nb-card-header>
+        <h5>Documenti di trasporto</h5>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)" (delete)="onDelete($event)"
+            [source]="source"></ng2-smart-table>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,45 @@
+<nb-layout>
+    <nb-layout-header class="{{style.header}}" fixed>
+        <div class="headerContent">
+            <a (click)="toggleMenu()" href="#" class="sidebar-toggle">
+                <nb-icon icon="menu-2"></nb-icon>
+            </a>
+            <a class="logo" href="">WebGest</a>
+        </div>
+
+        <ng-container [ngSwitch]="deviceType">
+            <div *ngSwitchCase="'mobile'">
+                <nb-actions class="actions">
+                    <nb-action>
+                        <nb-user [nbContextMenu]="menuUtente" name="{{userAnagrafica}}"
+                            title="Username: {{userUsername}}" color="#3071F2" onlyPicture></nb-user>
+                    </nb-action>
+                </nb-actions>
+            </div>
+            <div *ngSwitchDefault>
+                <nb-actions class="actions">
+                    <nb-action>
+                        <!-- <nb-user [nbContextMenu]="menuUtente" name="{{userAnagrafica}}" title="Username: {{userUsername}}" color="#3071F2"></nb-user> -->
+                        <nb-user [nbContextMenu]="menuUtente" name="{{userAnagrafica}}" title="{{userTipologia}}"
+                            color="#3071F2"></nb-user>
+                    </nb-action>
+                </nb-actions>
+            </div>
+        </ng-container>
+
+    </nb-layout-header>
+    <nb-sidebar responsive>
+        <nb-menu [items]='menu'></nb-menu>
+    </nb-sidebar>
+    <nb-layout-column>
+        <router-outlet></router-outlet>
+    </nb-layout-column>
+    <nb-layout-footer fixed>
+        <ng-container [ngSwitch]="true">
+            <div *ngSwitchCase="env.debug">
+                <h6 style="color: #FF5E1C;">Versione BETA {{globals.version}}</h6>
+            </div>
+            <div *ngSwitchDefault> &copy; 2021 - Record Italia s.r.l. v {{globals.version}} </div>
+        </ng-container>
+    </nb-layout-footer>
+</nb-layout>

@@ -1,0 +1,140 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Indirizzo</h5>
+            </div>
+            <div class="ml-1" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" hero (click)="add()" nbTooltip="Aggiungi Indirizzo"
+                    nbTooltipStatus="primary" nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Indirizzo" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <h6>Indirizzo {{i + 1}}</h6>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" hero (click)="remove(i)" nbTooltip="Rimuovi Indirizzo"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <fieldset [formGroupName]="i">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="label">Descrizione</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="descrizione"
+                            placeholder="Descrizione"
+                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="label">Tipologia</label>
+                        <nb-select fullWidth formControlName="idTipologia" placeholder="Seleziona la tipologia"
+                            (selectedChange)="isTouched(i)">
+                            <nb-option (click)="unTouche(i)">Seleziona la tipologia</nb-option>
+                            <nb-option *ngFor="let tipologia of tipologieIndirizzo" [value]="tipologia.id">
+                                {{tipologia.tipologia}}
+                            </nb-option>
+                        </nb-select>
+                    </div>
+                </div>
+                <div class="col-2 checkbox">
+                    <div class="form-group">
+                        <nb-checkbox (change)="checkPrincipale(i)" formControlName="predefinito" status="primary">
+                            Predefinito</nb-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="label">CAP</label>
+                        <input nbInput fullWidth class="form-control" type="text" [maxlength]="5" formControlName="cap"
+                            placeholder="CAP"
+                            (input)="$event.target.value.length > 4 && autocompleteOnCAP($event.target.value, i); $event.target.value.length < 5 && cleanField(i); $event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="label">Nazione</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="nazione"
+                            placeholder="Nazione"
+                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="label">Provincia</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="provincia"
+                            placeholder="Provincia"
+                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="label">Comune</label>
+                        <ng-container [ngSwitch]="true">
+                            <div *ngSwitchCase="multiCAP.length < 1">
+                                <input nbInput fullWidth class="form-control" type="text" formControlName="comune"
+                                    placeholder="Comune"
+                                    (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                            </div>
+                            <div *ngSwitchDefault>
+                                <ng-container [ngSwitch]="true">
+                                    <div *ngSwitchDefault>
+                                        <input nbInput fullWidth class="form-control" type="text"
+                                            formControlName="comune" placeholder="Comune"
+                                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                                    </div>
+                                    <div *ngSwitchCase="multiCAP[i].length >= 1">
+                                        <nb-select fullWidth formControlName="comune"
+                                            placeholder="Seleziona il comune:">
+                                            <nb-option *ngFor="let item of multiCAP[i]" value="{{item.comune}}"
+                                                (click)="isTouched(i)"> {{item.comune}} </nb-option>
+                                        </nb-select>
+                                    </div>
+                                </ng-container>
+
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label class="label">Via</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="via"
+                            placeholder="Via"
+                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="label">Civico</label>
+                        <input nbInput fullWidth class="form-control" type="text" formControlName="civico"
+                            placeholder="Civico"
+                            (input)="$event.target.value.length < 2 && isTouched(i); $event.target.value.length == 0 && unTouche(i)">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,109 @@
+<nb-card [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-4 text-left">
+                <button nbButton size="small" (click)="goBack()" status="primary">
+                    <nb-icon icon="arrow-back"></nb-icon>
+                    Indietro
+                </button>
+            </div>
+            <div class="col-4 text-center">
+                <button nbButton [status]="statoAnagrafica.color" *ngIf="modifica == true"> Stato:
+                    {{statoAnagrafica.stato}}</button>
+            </div>
+            <div [className]="btnClass">
+                <button nbButton status="primary" size="small" (click)="listaServizi()">
+                    <nb-icon icon="list"></nb-icon>
+                    Lista servizi
+                </button>
+                #{{urlModifica}}
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-12">
+                    <nb-accordion class="accordionAnagrafica" *ngIf="hasChildren !== null && !env.rivenditore">
+                        <nb-accordion-item>
+                            <nb-accordion-item-header>
+                                <h5>Ci sono {{hasChildren}} sotto-anagrafiche</h5>
+                            </nb-accordion-item-header>
+                            <nb-accordion-item-body>
+                                <ng2-smart-table [settings]="settingsSottoAnagrafiche"
+                                    (edit)="onEditSottoAnagrafica($event)" (delete)="onDeleteSottoAnagrafica($event)"
+                                    [source]="sourceSottoAnagrafiche">
+                                </ng2-smart-table>
+                            </nb-accordion-item-body>
+                        </nb-accordion-item>
+                    </nb-accordion>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <shared-anagrafica-crea (outForm)="addFormGroup('anagrafica', $event)"
+                        [parentForm]="myForm.get('anagrafica')" [origin]="'api'" [modifica]="modifica"
+                        [dataInstance]="apiAnagrafica">
+                    </shared-anagrafica-crea>
+                    <shared-indirizzo-crea (outForm)="addFormGroup('indirizzo', $event)"
+                        [parentForm]="myForm.get('indirizzo')" [origin]="'api'" [modifica]="modifica"
+                        [dataInstance]="apiAnagrafica">
+                    </shared-indirizzo-crea>
+                    <shared-contatto-crea (outForm)="addFormGroup('rubrica', $event)"
+                        [parentForm]="myForm.get('rubrica')" [modifica]="modifica" [dataInstance]="apiAnagrafica">
+                    </shared-contatto-crea>
+                    <shared-fatturazione-crea (outForm)="addFormGroup('fatturazione', $event)"
+                        [parentForm]="myForm.get('fatturazione')" [origin]="'api'" [modifica]="modifica"
+                        [dataInstance]="apiAnagrafica" [max]="1"></shared-fatturazione-crea>
+                </div>
+                <div class="col-md-4">
+                    <div class="anagraficaRelazione" *ngIf="anagraficaRelazione == null && !env.rivenditore">
+                        <button (click)="anagraficaRelazione = true" nbButton status="primary">
+                            <nb-icon icon="person-add"></nb-icon> Collega anagrafica-padre
+                        </button>
+                    </div>
+
+                    <div *ngIf="anagraficaRelazione !== null && !env.rivenditore">
+                        <shared-anagrafica-seleziona (outForm)="addFormGroup('relazioni', $event)"
+                            [parentForm]="myForm.get('relazioni')" [modifica]="modifica" [dataInstance]="apiAnagrafica"
+                            [origine]="'anagrafica'" [titoloComponent]="'Anagrafica - Relazione'">
+                        </shared-anagrafica-seleziona>
+                    </div>
+                    <shared-utente-crea (outForm)="addFormGroup('utente', $event)" [parentForm]="myForm.get('utente')"
+                        [origin]="'api'" [modifica]="modifica" [dataInstance]="apiAnagrafica"></shared-utente-crea>
+
+                    <shared-note-crea (outForm)="addFormGroup('nota', $event)" [parentForm]="myForm.get('nota')"
+                        [origin]="'api'" [modifica]="modifica" [dataInstance]="apiAnagrafica"></shared-note-crea>
+
+                    <div *ngIf="isAutista == true">
+                        <h5 style="text-align: center;">Informazioni autista</h5>
+                        <shared-documento-crea (outForm)="addFormGroup('documento', $event)"
+                            [parentForm]="myForm.get('documento')" [dataInstance]="apiAnagrafica">
+                        </shared-documento-crea>
+                        <shared-componente-seleziona (outForm)="addFormGroup('componente', $event)"
+                            [parentForm]="myForm.get('componente')" [max]="1" [modifica]="modifica" [duplicato]="false"
+                            [dataInstance]="apiAnagrafica"></shared-componente-seleziona>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-md-3">
+                <ng-container [ngSwitch]="true">
+                    <button *ngSwitchCase="modifica == true" nbButton form="myForm" fullWidth (click)="onReset()"
+                        status="warning">Annulla modifiche</button>
+                    <button *ngSwitchDefault nbButton form="myForm" fullWidth (click)="onReset()"
+                        status="warning">Resetta i
+                        campi</button>
+                </ng-container>
+            </div>
+            <div class="col-md-3 offset-6">
+                <button nbButton (click)="onSubmit()" fullWidth status="success" [disabled]="myForm.invalid">Salva
+                    anagrafica</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

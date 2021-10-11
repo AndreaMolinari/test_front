@@ -1,0 +1,32 @@
+<nb-card>
+    <nb-card-header>
+        <button nbButton size="small" (click)="goBack()" status="primary">
+            <nb-icon icon="arrow-back"></nb-icon>
+            Indietro
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-12">
+                    <shared-tacho-crea (outForm)="addFormGroup('tacho', $event)" [parentForm]="myForm.get('tacho')"
+                        [dataInstance]="apiTacho" [modifica]="modifica" [max]='1'></shared-tacho-crea>
+                        <shared-note-crea (outForm)="addFormGroup('nota', $event)" [parentForm]="myForm.get('nota')"
+                        [dataInstance]="apiTacho" [modifica]="modifica" [max]='1'></shared-note-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-md-3">
+                <button nbButton form="myForm" fullWidth (click)="onReset()" status="warning">Resetta i
+                    campi</button>
+            </div>
+            <div class="col-md-3 offset-6">
+                <button nbButton (click)="onSubmit()" fullWidth [disabled]="myForm.invalid" status="success">Salva
+                    tacho</button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

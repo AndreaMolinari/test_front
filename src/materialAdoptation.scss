@@ -1,0 +1,109 @@
+mat-form-field {
+    width: 100%;
+
+    .mat-form-field-outline {
+        background: #192038 !important;
+        color     : #101426 !important;
+    }
+}
+
+.mat-select-search-inner {
+    background: #192038 !important;
+}
+
+.mat-select-placeholder {
+    color: #8f9bb3;
+}
+
+mat-option {
+    font-weight: 400;
+}
+
+.mat-select-arrow {
+    color: white !important;
+}
+
+.mat-selected:not(.mat-option-disabled) {
+    color: #3366ff !important;
+}
+
+.mat-select-panel {
+    background: #222b45 !important;
+    box-shadow: #3e41486e 4px 4px 18px !important;
+}
+
+.mat-form-field-empty.mat-form-field-label {
+    color: #778094 !important;
+}
+
+.mat-form-field-flex>.mat-form-field-infix {
+    padding: .5rem !important;
+}
+
+.mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+.mat-form-field-label-wrapper {
+    // padding-bottom: .5rem !important;
+    padding-bottom: 0 !important;
+    margin        : 0 !important;
+}
+
+.mat-checkbox-disabled {
+    &.mat-checkbox-checked {
+        .mat-checkbox-background {
+            background: #3366ff !important;
+
+            svg.mat-checkbox-checkmark {
+                path {
+                    stroke: whitesmoke !important;
+                }
+            }
+        }
+    }
+}
+
+
+.mat_table_as_nebular {
+    background-color: #222b45;
+
+    td {
+        text-align    : left;
+        vertical-align: middle;
+    }
+
+    tr:nth-child(even) {
+        background: #192038;
+    }
+
+    tr:nth-child(odd) {
+        background: #222b45;
+    }
+
+    tr:hover {
+        background: #192038;
+    }
+}
+
+.mat-select-panel {
+    overflow: hidden !important;
+}
+
+// mat-checkbox.mat-checkbox {
+//     &.mat-checkbox-checked {
+//         label.mat-checkbox-layout {
+//             .mat-checkbox-inner-container {
+//                 input.mat-checkbox-input {
+//                     .mat-checkbox-backgroud {
+//                         background: #3366ff !important;
+
+//                         svg.mat-checkbox-checkmark {
+//                             fill: white !important;
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }

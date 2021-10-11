@@ -1,0 +1,61 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6 text-left">
+                <h5> Filtri </h5>
+            </div>
+            <div class="col-6 text-right">
+                <button nbButton status="primary" (click)="downloadCSV()">
+                    <nb-icon icon="cloud-download-outline"></nb-icon> Export .CVS
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="margin-bottom: 1rem;">
+        <form [formGroup]="filters">
+
+            <div class="row">
+                <div class="col">
+                    <label class="label"> Tipologia utenza </label>
+                    <nb-select fullWidth formControlName="idTipologia" placeholder="Seleziona una tipologia">
+                        <nb-option *ngFor="let tipologia of arrayTipologie" [value]="tipologia.id">
+                            {{tipologia.tipologia}} </nb-option>
+                    </nb-select>
+                </div>
+                <div class="col">
+                    <label class="label"> Rivenditore </label>
+                    <nb-select fullWidth formControlName="idRivenditore" placeholder="Seleziona un rivenditore">
+                        <nb-option [value]="40"> Mechanical Line Solution </nb-option>
+                    </nb-select>
+                </div>
+                <div class="col">
+                    <label class="label"> Da data </label>
+                    <input fullWidth nbInput [nbDatepicker]="from" formControlName="created_after"
+                        placeholder="Da data">
+                    <nb-datepicker #from format="D MMM YYYY"></nb-datepicker>
+                </div>
+                <div class="col">
+                    <label class="label"> A data </label>
+                    <input fullWidth nbInput [nbDatepicker]="to" formControlName="created_before" placeholder="A data">
+                    <nb-datepicker #to format="D MMM YYYY"></nb-datepicker>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 text-right">
+                    <button nbButton status="primary" (click)="search()">
+                        <nb-icon icon="funnel"></nb-icon> Filtra
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </nb-card-body>
+    <nb-card-footer class="text-center"> {{source['data'].length}} elementi trovati! </nb-card-footer>
+</nb-card>
+
+<nb-card>
+    <nb-card-body style="margin-bottom: 1rem;" [nbSpinner]="loading" nbSpinnerStatus="primary">
+        <ng2-smart-table [settings]="settings" [source]="source"></ng2-smart-table>
+    </nb-card-body>
+</nb-card>

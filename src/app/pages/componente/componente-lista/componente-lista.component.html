@@ -1,0 +1,44 @@
+<nb-card>
+    <nb-card-header>
+        <div class="row">
+            <div class="col-6 text-left">
+                <h5>Componente</h5>
+            </div>
+            <div class="col-6 text-right">
+                <button nbButton status="primary" (click)="onMassiveCreate()"> + Aggiunta massiva </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+        <ng2-smart-table [settings]="settings" (create)="onCreate()" (edit)="onEdit($event)" (delete)="onDelete($event)"
+            [source]="source"></ng2-smart-table>
+    </nb-card-body>
+</nb-card>
+
+<ng-template #dialog let-ref="dialogRef">
+    <nb-card>
+        <nb-card-header class="text-center"> <h5> Conferma operazione! </h5> </nb-card-header>
+        <nb-card-body>
+            <div class="row" style="margin: .5rem;">
+                <div class="col-12">
+                    Quanto componente è associato a un servizio!
+                </div>
+            </div>
+            <div class="row" style="margin: .5rem;">
+                <div class="col-12">
+                    Sei sicuro di voler cancellare questo componente?
+                </div>
+            </div>
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row">
+                <div class="col-6 text-left">
+                    <button nbButton fullWidth status="primary" (click)="ref.close(false)"> Annulla </button>
+                </div>
+                <div class="col-6 text-right">
+                    <button nbButton fullWidth status="danger" (click)="ref.close(true)"> Forza cancellazione </button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>
+</ng-template>

@@ -1,0 +1,158 @@
+<nb-card [formGroup]="questoForm" [accent]="cardAccent">
+    <nb-card-header>
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h5>Fatturazione</h5>
+                <h3 *ngIf="env.debug == true">{{parentForm.status}}</h3>
+            </div>
+            <div class="ml-1" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi Fatturazione" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="ml-1">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Fatturazione"
+                    nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let item of parentForm.controls; let i = index;">
+        <ng-container *ngIf="i > 0">
+            <hr class="multiformSpacer">
+            <div class="row mb-1">
+                <div class="col-8 col-md-10">
+                    <div class="h6">Fattura {{i + 1}}</div>
+                </div>
+                <div class="col-4 col-md-2 text-right">
+                    <button nbButton size="tiny" (click)="remove(i)" nbTooltip="Rimuovi Fatturazione"
+                        nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                        <nb-icon icon="minus"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Tipologia pagamento</label>
+                    <nb-select fullWidth formControlName="idModalita" placeholder="Tipologia pagamento">
+                        <nb-option *ngFor="let item of arrayModFatturazione" value="{{item.id}}">{{item.tipologia}}
+                        </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="label">Scadenza pagamento</label>
+                    <nb-select fullWidth formControlName="idPeriodo" placeholder="Scadenza pagamento">
+                        <nb-option *ngFor="let item of arrayCadenzaFatturazione" value="{{item.id}}">{{item.tipologia}}
+                        </nb-option>
+                    </nb-select>
+                </div>
+            </div>
+        </div>
+        <ng-container [ngSwitch]="true">
+            <div
+                *ngSwitchCase="parentForm.at(i).get('idModalita').value == '41' || parentForm.at(i).get('idModalita').value == '42'">
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">Banca</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="banca"
+                                placeholder="Banca">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">Filiale</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="filiale"
+                                placeholder="Filiale">
+                        </div>
+                    </div>
+                </div>
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="label">IBAN</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="iban"
+                                placeholder="IBAN" [maxlength]="27"
+                                (input)="$event.target.value.length > 26 && autocompleteOnIBAN($event.target.value, i); $event.target.value.length < 27 && cleanField(i)">
+                            <!-- <input nbInput fullWidth
+                                class="form-control" type="text"
+                                formControlName="iban"
+                                (keyup)="requiredFields(i)"
+                                placeholder="IBAN" [maxlength]="27"
+                                (input)="$event.target.value.length > 26 && autocompleteOnIBAN($event.target.value, i) || $event.target.value.length < 27 && cleanField(i)" > -->
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="label">CIN</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="iban_cin"
+                                placeholder="CIN">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="label">ABI</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="iban_abi"
+                                placeholder="ABI">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="label">CAB</label>
+                            <input nbInput fullWidth class="form-control" type="text" formControlName="iban_cab"
+                                placeholder="CAB">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="label">SDI</label>
+                    <input class="form-control" nbInput fullWidth formControlName="sdi" type="text" placeholder="SDI"
+                        [maxlength]="7">
+                </div>
+            </div>
+        </div>
+        <div class="row" [formGroupName]="i">
+            <div class="col-md-6">
+                <label class="label">PEC</label>
+                <input class="form-control" nbInput fullWidth formControlName="pec" type="text" placeholder="PEC">
+            </div>
+            <div class="col-md-6">
+                <label class="label">E-mail fatture</label>
+                <input class="form-control" nbInput fullWidth formControlName="mail" type="email" placeholder="E-Mail">
+            </div>
+        </div>
+        <div class="row checkbox" [formGroupName]="i">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <nb-checkbox formControlName="speseIncasso" status="primary">Spese incasso dovute</nb-checkbox>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <nb-checkbox formControlName="speseSpedizione" status="primary">Spese spedizione dovute
+                    </nb-checkbox>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <nb-checkbox formControlName="splitPA" status="primary">Split PA</nb-checkbox>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <nb-checkbox formControlName="esenteIVA" status="primary">Esente IVA</nb-checkbox>
+                </div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,0 +1,103 @@
+<nb-card [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary"
+    [ngClass]="(!env.rivenditore) ? (datiModifica !== undefined && datiModifica.anagraficaParent !== null) ? 'child' : '' : ''">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-2 text-left">
+                <button nbButton size="small" (click)="goBack()" status="primary">
+                    <nb-icon icon="arrow-back"></nb-icon>
+                    Indietro
+                </button>
+            </div>
+            <div class="col-8 text-center" style="color: #ff3d71">
+                <ng-container
+                    *ngIf="!env.rivenditore && datiModifica !== undefined && datiModifica.anagraficaParent !== null">
+                    {{(datiModifica.anagraficaParent.ragSoc == null) ? datiModifica.anagraficaParent.nome + ' '
+                    +
+                    datiModifica.anagraficaParent.cognome : datiModifica.anagraficaParent.ragSoc}}
+                </ng-container>
+            </div>
+            <div class="col-2 text-right" *ngIf="modifica == true">
+                #{{urlIDModifica}}
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-xs-12 col-lg-8">
+                    <shared-servizio-crea (outForm)="addFormGroup('servizio', $event)"
+                        [parentForm]="myForm.get('servizio')" [max]="1" [modifica]="modifica" [duplicato]="duplicato"
+                        [dataInstance]="apiServizio"></shared-servizio-crea>
+                    <div class="row">
+                        <div class="col">
+                            <shared-radiocomando-seleziona (outForm)="addFormGroup('radiocomando', $event)"
+                                [parentForm]="myForm.get('radiocomando')" [modifica]="modifica"
+                                [dataInstance]="apiServizio"></shared-radiocomando-seleziona>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="!(modRadiocomando | async)">
+                        <div class="col-xs-12 col-lg-6">
+                            <shared-componente-seleziona (outForm)="addFormGroup('componente', $event)"
+                                [parentForm]="myForm.get('componente')" [source]="'componente'" [max]="3"
+                                [modifica]="modifica" [duplicato]="duplicato" [dataInstance]="apiServizio">
+                            </shared-componente-seleziona>
+                        </div>
+                        <div class="col-xs-12 col-lg-6">
+                            <shared-componente-seleziona (outForm)="addFormGroup('tacho', $event)"
+                                [parentForm]="myForm.get('tacho')" [source]="'tacho'" [max]="3" [modifica]="modifica"
+                                [duplicato]="duplicato" [dataInstance]="apiServizio">
+                            </shared-componente-seleziona>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-lg-4">
+                    <shared-mezzo-seleziona *ngIf="!(modRadiocomando | async)" (outForm)="addFormGroup('mezzo', $event)"
+                        [parentForm]="myForm.get('mezzo')" [max]="1" [modifica]="modifica" [duplicato]="duplicato"
+                        [dataInstance]="apiServizio">
+                    </shared-mezzo-seleziona>
+                    <shared-anagrafica-seleziona *ngIf="!(modRadiocomando | async)"
+                        (outForm)="addFormGroup('servizioInstallatore', $event)"
+                        [parentForm]="myForm.get('servizioInstallatore')" [titoloComponent]="'Installatore'"
+                        [origine]="'installatore'" [modifica]="modifica" [duplicato]="duplicato"
+                        [dataInstance]="apiServizio">
+                    </shared-anagrafica-seleziona>
+                    <shared-note-crea (outForm)="addFormGroup('note', $event)" [parentForm]="myForm.get('note')"
+                        [modifica]="modifica" [duplicato]="duplicato" [dataInstance]="apiServizio" [origin]="'api'">
+                    </shared-note-crea>
+                </div>
+            </div>
+        </form>
+
+        <ng-container *ngIf="!(modRadiocomando | async)">
+            <nb-accordion *ngIf="modifica && !env.rivenditore">
+                <nb-accordion-item expanded>
+                    <nb-accordion-item-header>Informazioni Flotta</nb-accordion-item-header>
+                    <nb-accordion-item-body>
+                        <ng2-smart-table [settings]="settingFlotta" (create)="onCreateFlotta($event)"
+                            (edit)="onEditFlotta($event)" (delete)="onDeleteFlotta($event)" [source]="sourceFlotta">
+                        </ng2-smart-table>
+                    </nb-accordion-item-body>
+                </nb-accordion-item>
+            </nb-accordion>
+        </ng-container>
+
+    </nb-card-body>
+    <nb-card-footer *ngIf="showFooter">
+        <div class="row">
+            <div class="col-6 text-left">
+                <button nbButton form="myForm" (click)="onReset()" status="warning"> {{(modifica) ?
+                    'Annulla modifiche' : 'Resetta i campi'}} </button>
+            </div>
+            <div class="col-6 text-right">
+                <!-- <button *ngIf="!modifica" style="margin-right: 1rem;" nbButton (click)="onSubmitPlusFlotta()"
+                    [disabled]="myForm.invalid" status="info">
+                    Salva <br> + Aggiungi flotta
+                </button> -->
+
+                <button nbButton (click)="onSubmitPlusFlotta()" [disabled]="myForm.invalid" status="success">
+                    Salva servizio
+                </button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

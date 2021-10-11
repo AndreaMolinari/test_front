@@ -1,0 +1,16 @@
+# syntax=docker/dockerfile:1
+
+FROM node:latest
+
+RUN mkdir /webgest_cnt && chown node:node /webgest_cnt
+RUN mkdir /webgest_cnt/node_modules && chown node:node /webgest_cnt
+
+WORKDIR /webgest_cnt
+
+COPY --chown=node:node ../webgest/package.json ../webgest/package-lock.json ./
+
+RUN npm ci --quiet
+
+COPY --chown=node:node ../webgest .
+
+ENTRYPOINT [ "npm", "start"]

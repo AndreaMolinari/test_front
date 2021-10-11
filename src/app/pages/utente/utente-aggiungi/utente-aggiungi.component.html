@@ -1,0 +1,27 @@
+<nb-card>
+        <nb-card-header>
+            <button nbButton size="small" (click)="goBack()" status="primary">
+                <nb-icon icon="arrow-back"></nb-icon>
+                Indietro
+            </button>
+        </nb-card-header>
+        <nb-card-body>
+            <form [formGroup]="myForm">
+                <div class="row">
+                    <div class="col-md-12">
+                        <shared-utente-crea  (outForm)="addFormGroup('utente', $event)" [parentForm]="myForm.get('utente')" [dataInstance]="apiUtente" [modifica]="modifica" [max]=1></shared-utente-crea>
+                    </div>
+                </div>
+            </form>
+        </nb-card-body>
+        <nb-card-footer>
+            <div class="row">
+                <div class="col-md-3">
+                    <button nbButton form="myForm" fullWidth (click)="onReset()" status="warning">Resetta i campi</button>
+                </div>
+                <div class="col-md-3 offset-6">
+                    <button nbButton (click)="onSubmit()" fullWidth [disabled]="myForm.invalid" status="success">Salva utente</button>
+                </div>
+            </div>
+        </nb-card-footer>
+    </nb-card>

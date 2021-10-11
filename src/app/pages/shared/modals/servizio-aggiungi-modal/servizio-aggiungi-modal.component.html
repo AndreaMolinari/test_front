@@ -1,0 +1,23 @@
+<nb-card [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+    <nb-card-header>
+        Modifica massiva di servizio
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-12">
+                    <shared-servizio-crea (outForm)="addFormGroup('servizio', $event)"
+                        [parentForm]="myForm.get('servizio')" [max]="1" [modifica]="modifica"
+                        [dataInstance]="apiServizio"></shared-servizio-crea>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+    <nb-card-footer>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button nbButton (click)="onSubmit(myForm)" [disabled]="myForm.invalid" status="success"> Conferma modifica </button>
+            </div>
+        </div>
+    </nb-card-footer>
+</nb-card>

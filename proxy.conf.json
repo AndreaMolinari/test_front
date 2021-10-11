@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+        "target": "http://api.recorditalia.ino",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+}

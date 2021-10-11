@@ -1,0 +1,108 @@
+<nb-card [formGroup]="questoForm">
+    <nb-card-header>
+        <div class="row">
+            <div class="col-8 col-md-10">
+                <h5>{{titoloComponent}}</h5>
+                <h3 *ngIf="env.debug">{{parentForm.status}}</h3>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="max > parentForm.length">
+                <button nbButton size="tiny" (click)="add()" nbTooltip="Aggiungi relazione" nbTooltipStatus="primary"
+                    nbTooltipPlacement="bottom" status="primary">
+                    <nb-icon icon="plus"></nb-icon>
+                </button>
+            </div>
+            <div class="col-4 col-md-2 text-right" *ngIf="origine === 'installatore' || origine === 'anagrafica'">
+                <button nbButton size="tiny" (click)="remove(0)" nbTooltip="Rimuovi Anagrafica" nbTooltipStatus="danger"
+                    nbTooltipPlacement="bottom" status="danger">
+                    <nb-icon icon="minus"></nb-icon>
+                </button>
+            </div>
+        </div>
+    </nb-card-header>
+    <nb-card-body formArrayName="parentForm" *ngFor="let anagrafica of parentForm.controls; let a = index;">
+        <fieldset [formGroupName]="a" [disabled]="(isRivenditore && modifica) ? true : false">
+            <ng-container *ngIf="a > 0">
+                <hr class="multiformSpacer">
+                <div class="row mb-1">
+                    <div class="col-8 col-md-10">
+                        <div class="h6">Anagrafica {{a + 1}}</div>
+                    </div>
+                    <div class="col-4 col-md-2 text-right">
+                        <button nbButton size="tiny" (click)="remove(a)" nbTooltip="Rimuovi Anagrafica"
+                            nbTooltipStatus="danger" nbTooltipPlacement="bottom" status="danger">
+                            <nb-icon icon="minus"></nb-icon>
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <ng-container [ngSwitch]="true">
+                            <div *ngSwitchCase="origine == 'installatore'">
+
+                                <label class="label">Anagrafica</label>
+                                <mat-form-field appearance="outline">
+                                    <mat-select formControlName="idAnagrafica" (selectionChange)="setValidators()"
+                                        placeholder="Seleziona una anagrafica">
+                                        <mat-option>
+                                            <ngx-mat-select-search placeholderLabel="Cerca una anagrafica"
+                                                noEntriesFoundLabel="'Nessuna anagrafica trovata con questo nome'"
+                                                formControlName="autocomplete">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+
+                                        <cdk-virtual-scroll-viewport itemSize="45" [minBufferPx]="45 * 4"
+                                            [maxBufferPx]="45 * 8" [style.height.px]="45 * 5">
+                                            <mat-option *cdkVirtualFor="let anagrafica of filteredAnagrafiche | async"
+                                                [value]="anagrafica['id']">
+                                                {{anagrafica['nome']}}
+                                            </mat-option>
+                                        </cdk-virtual-scroll-viewport>
+
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- <label class="label">Anagrafica</label>
+                                <nb-select fullWidth formControlName="idAnagrafica" placeholder="Anagrafica"
+                                    (selectedChange)="setValidators()">
+                                    <nb-option *ngFor="let item of arrayAnagrafiche" value="{{item.id}}"> {{item.nome}}
+                                    </nb-option>
+                                </nb-select> -->
+
+                            </div>
+                            <div *ngSwitchCase="origine == 'anagrafica'">
+                                <label class="label">Anagrafica</label>
+                                <nb-select fullWidth formControlName="idParent" placeholder="Anagrafica padre">
+                                    <nb-option *ngFor="let item of arrayAnagrafiche" [value]="item.id"> {{item.nome}}
+                                    </nb-option>
+                                </nb-select>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <ng-container [ngSwitch]="true">
+                            <div *ngSwitchCase="origine == 'installatore'">
+                                <label class="label">Data di installazione</label>
+                                <input nbInput fullWidth type="text" class="form-control" [nbDatepicker]="datepicker"
+                                    formControlName="dataInstallazione" placeholder="Data installazione">
+                                <nb-datepicker #datepicker format="D MMM YYYY"></nb-datepicker>
+                            </div>
+                            <div *ngSwitchCase="origine == 'anagrafica'">
+                                <label class="label">Relazione anagrafica</label>
+                                <nb-select fullWidth formControlName="idTipologia" placeholder="Relazione anagrafica">
+                                    <nb-option *ngFor="let item of arrayRuoli" [value]="item.id"> {{item.tipologia}}
+                                    </nb-option>
+                                </nb-select>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </nb-card-body>
+</nb-card>

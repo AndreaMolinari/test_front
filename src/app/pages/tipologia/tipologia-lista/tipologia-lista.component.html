@@ -1,0 +1,39 @@
+<nb-card>
+  <nb-card-header>
+    <h5>Tipologia</h5>
+  </nb-card-header>
+
+  <nb-card-body [nbSpinner]="loadingData" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+    <div class="row">
+      <div class="col-md-1 offset-11">
+        <button nbButton shape="round" fullWidth routerLink="/pages/tipologia/aggiungi" status="primary"> + </button>
+      </div>
+    </div>
+    <div class="row spazio">
+      <table class="tabella" [nbTreeGrid]="source">
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+  
+        <ng-container [nbTreeGridColumnDef]="customColumn">
+          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{customColumn}}</th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'">
+            </nb-tree-grid-row-toggle>
+            {{row.data[customColumn]}}
+          </td>
+        </ng-container>
+        <ng-container *ngFor="let column of defaultColumns" [nbTreeGridColumnDef]="column">
+          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <ng-container *ngIf="column !== 'azioni'; else actionBlock">
+              {{row.data[column] || '-'}} 
+            </ng-container>
+            <ng-template #actionBlock>
+              <nb-icon icon="edit-outline" routerLink="/pages/tipologia/modifica/{{row.data['id']}}"></nb-icon>
+            </ng-template>
+          </td>
+        </ng-container>
+      </table>
+    </div>
+  </nb-card-body>
+</nb-card>
